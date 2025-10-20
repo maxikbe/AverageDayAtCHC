@@ -1,1 +1,1 @@
-#School project in Three.js
+# Average Day (night) at CHC
