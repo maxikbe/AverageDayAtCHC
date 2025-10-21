@@ -240,21 +240,28 @@ function createCHC(){
     //CHC Colliders
 
     //BOTTOM Floor
-    addCollider("MainCHCDoor", 65, 0, 0, 1, 30, 30);
-    addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
-    addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
+        //outside
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 140, 1, 140);
+    addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
+        //doors
+    addCollider("MainCHCDoor", 65, 0, 0, 1, 30, 30);
+        //walls
+    addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
+        //floors
     addCollider("smallStairFloor1", 135, -12, 0, 28, 1, 32);
-    addCollider("smallStairFloor2", 135, -10, -30, 28, 1, 32);
+    addCollider("smallStairFloor2", 135, 2, 20, 28, 1, 32);
+    addCollider("smallStairFloor3", 80, -13, 30, 32, 1, 20);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
 
     //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
+    addStairs("smallEntranceStairs3", 82, 2, 20, 35, 5, 4, 4, "z+");
     addStairs("EntranceStairs1", 100, 21, -30, 50, 30, 20, 33, "x-");
     addStairs("EntranceStairs2", 100, 45, -7, 50, 22, 20, 33, "x+");
 
     //SECOND Floor
+        //floors
     addCollider("midFloor2", 126, 40, -5, 40, 1, 20);
     addCollider("midFloor3", 130, 40, -30, 35, 1, 32);
     addCollider("midFloor4", 67, 60, -20, 28, 1, 50);
@@ -264,6 +271,7 @@ function createCHC(){
     addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
 
     //THIRD Floor
+        //floors
     addCollider("midFloor2", 126, 72, -5, 40, 1, 20);
     addCollider("midFloor3", 130, 72, -30, 35, 1, 32);
 
