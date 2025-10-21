@@ -139,6 +139,7 @@ function loadModel(name, path, position = [0, 0, 0], scale = [1, 1, 1], rotation
 // COLIDERS CREATOR
 //Colidable models
 const colliders = [];
+const stairs = [];
 const colliderVisuals = new THREE.Group();
 scene.add(colliderVisuals);
 
@@ -169,6 +170,36 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
 
     //COL DEFINICIONS
     if (name === "busFloor") myBusFloor = box;
+}
+
+// NEW: Function specifically for stairs
+function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain) {
+    const stairData = {
+        name: name,
+        box: new THREE.Box3(
+            new THREE.Vector3(x - sizeX / 2, y - sizeY / 2, z - sizeZ / 2),
+            new THREE.Vector3(x + sizeX / 2, y + sizeY / 2, z + sizeZ / 2)
+        ),
+        heightGain: heightGain,
+        startY: y - sizeY / 2,
+        endY: y + sizeY / 2
+    };
+    
+    stairs.push(stairData);
+
+    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
+    const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
+    const material = new THREE.MeshBasicMaterial({
+        color: 0xff00ff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.5
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    mesh.name = `stair_vis_${name}`;
+    colliderVisuals.add(mesh);
+    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
 }
 
 function createNP(){
@@ -205,13 +236,21 @@ function createNP(){
 }
 
 function createCHC(){
-    //Namesti Prace Colliders
+    //CHC Colliders
+
+    //Bottom Floor
     addCollider("MainCHCDoor", 65, 0, 0, 1, 30, 30);
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 140, 1, 140);
-    addCollider("smallEnteranceStairs",110, -14, 0, 5, 1, 25,)
-    //Namesti Prace Models
+    addCollider("smallStairFloor", 135, -12, 0, 28, 1, 32);
+    addCollider("smallStairFloor2", 135, -8, -30, 28, 1, 32);
+
+    //stairColliders
+    addStairs("smallEntranceStairs", 120, 2, 0, 8, 6, 32, 8);
+    addStairs("smallEntranceStairs", 135, 6, -15, 25, 4, 4, 4);
+
+    //CHC Model
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
 }
 
@@ -228,6 +267,16 @@ function getObjectBelowPlayer() {
 
     const hitCollider = colliders.find(box => box.intersectsBox(playerBottomBox));
     return hitCollider ? hitCollider.name : null;
+}
+
+// Check if player on stairs
+function getStairsAtPosition(position) {
+    for (let stair of stairs) {
+        if (stair.box.containsPoint(position)) {
+            return stair;
+        }
+    }
+    return null;
 }
 
 // RESIZE HANDELER
@@ -318,7 +367,7 @@ const transBG = document.getElementById("Transition");
 function animate() {
     //DEBUG ONLY ----------------------------------------------------------------------- DELETE
     colliderVisuals.children.forEach(mesh => {
-        const name = mesh.name.replace('collider_vis_', '');
+        const name = mesh.name.replace('collider_vis_', '').replace('stair_vis_', '');
         const box = colliders[name];
         if (box) {
             const center = new THREE.Vector3();
@@ -463,6 +512,7 @@ function animate() {
                 snowField.clear();
                 
                 colliders.length = 0;
+                stairs.length = 0;
 
                 // nulling variables
                 myCarRed = null;
@@ -485,7 +535,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 2, 10);
+            controls.getObject().position.set(0, 10, 10);
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -548,6 +598,9 @@ function animate() {
     newPos.add(forward.clone().multiplyScalar(velocity.z));
     newPos.add(right.clone().multiplyScalar(velocity.x));
 
+    // Check for stairs at new position
+    const stairAtNewPos = getStairsAtPosition(newPos);
+
     // Horizontal collision check
     const hit = colliders.some(box => box.containsPoint(newPos));
 
@@ -555,6 +608,18 @@ function animate() {
     if (!hit) {
         controls.moveForward(velocity.z);
         controls.moveRight(velocity.x);
+        
+        if (stairAtNewPos) {
+            const stairProgress = (newPos.x - stairAtNewPos.box.min.x) / (stairAtNewPos.box.max.x - stairAtNewPos.box.min.x);
+            const targetHeight = stairAtNewPos.startY + (stairAtNewPos.heightGain * stairProgress);
+            
+            const currentY = controls.getObject().position.y;
+            const heightDiff = targetHeight + playerHeight - currentY;
+            
+            if (Math.abs(heightDiff) > 0.1) {
+                controls.getObject().position.y += heightDiff * 0.2;
+            }
+        }
     }
 
     // Player Colide Box
@@ -565,9 +630,10 @@ function animate() {
     
     // Ground Check y
     const onGround = colliders.some(box => box.intersectsBox(playerBox));
+    const onStairs = getStairsAtPosition(playerCurrentPos);
 
     // GRAVITY
-    if (!onGround) {
+    if (!onGround && !onStairs) {
         velocity.y -= gravityForce;
 
         const nextPos = playerCurrentPos.clone();
@@ -622,7 +688,7 @@ function animate() {
             }
         }    
     }
-
+    console.log(controls.getObject().position);
     renderer.render(scene, camera);
 }
 animate();
