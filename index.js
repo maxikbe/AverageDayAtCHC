@@ -9,8 +9,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -173,12 +173,12 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
 
 function createNP(){
     //Namesti Prace Colliders
-    addCollider("floorNp", 30, 0, 0, 75, 1, 120); // Side Walk Floor // z = from middle pillar to left // x = From edge to edge
+    addCollider("floorNp", 30, -18, 0, 75, 1, 120); // Side Walk Floor // z = from middle pillar to left // x = From edge to edge
     addCollider("trashCanNP", 43.1, 0, -27.5, 8, 20, 8); //Trash Can
     addCollider("pillarMNP", 40, 0, -27.5, 8, 20, 8); // Pillar Middle
     addCollider("pillarRNP", 40, 0, 30, 8, 20, 8); // Pillar Right
     addCollider("ticketMatNP", 40, 0, 25, 10, 20, 8); // Ticket Mat
-    addCollider("busFloor",0, -50, 0, 50, 1, 135); // Bus
+    addCollider("busFloor",0, -68, 0, 50, 1, 135); // Bus
     //Namesti Prace Models
     loadModel("car", "./models/car_1.glb", [140, -15, -200], [10, 10, 10], [0, Math.PI / 1, 0]);
     loadModel("bus", "./models/bus.glb", [94, -15, -500], [5, 5, 5]);
@@ -209,7 +209,8 @@ function createCHC(){
     addCollider("MainCHCDoor", 65, 0, 0, 1, 30, 30);
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
-    addCollider("OutOfSchool", 50, 0, -20, 140, 1, 140);
+    addCollider("OutOfSchoolFloor", 50, -18 , -20, 140, 1, 140);
+    addCollider("smallEnteranceStairs",110, -14, 0, 5, 1, 25,)
     //Namesti Prace Models
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
 }
@@ -221,8 +222,8 @@ const down = new THREE.Vector3(0, -1, 0);
 function getObjectBelowPlayer() {
     const playerCurrentPos = controls.getObject().position.clone();
     const playerBottomBox = new THREE.Box3(
-        new THREE.Vector3(playerCurrentPos.x - playerHalfWidth, playerCurrentPos.y - playerHeight - 0.5, playerCurrentPos.z - playerHalfWidth),
-        new THREE.Vector3(playerCurrentPos.x + playerHalfWidth, playerCurrentPos.y - playerHeight + 0.5, playerCurrentPos.z + playerHalfWidth)
+        new THREE.Vector3(playerCurrentPos.x - playerHalfWidth, playerCurrentPos.y - playerHeight*10 - 0.5, playerCurrentPos.z - playerHalfWidth),
+        new THREE.Vector3(playerCurrentPos.x + playerHalfWidth, playerCurrentPos.y + 0.5, playerCurrentPos.z + playerHalfWidth)
     );
 
     const hitCollider = colliders.find(box => box.intersectsBox(playerBottomBox));
@@ -278,7 +279,7 @@ controls.addEventListener('unlock', () => { /* pointer unlocked */ });
 //Player Settings
 
 const playerPos = controls.getObject()
-const playerHeight = 1.8;
+const playerHeight = 2.1;
 const playerHalfWidth = 0.5;
 
 const velocity = new THREE.Vector3();
@@ -348,6 +349,7 @@ function animate() {
     // --- Namesti Prace START ---
     if (locationNP){
         if(!createdNP){
+            controls.lock();
             createSnow();
             createNP();
             createdNP = true; 
@@ -557,7 +559,7 @@ function animate() {
 
     // Player Colide Box
     const playerBox = new THREE.Box3(
-        new THREE.Vector3(playerCurrentPos.x - playerHalfWidth, playerCurrentPos.y - playerHeight, playerCurrentPos.z - playerHalfWidth),
+        new THREE.Vector3(playerCurrentPos.x - playerHalfWidth, playerCurrentPos.y - playerHeight*10, playerCurrentPos.z - playerHalfWidth),
         new THREE.Vector3(playerCurrentPos.x + playerHalfWidth, playerCurrentPos.y, playerCurrentPos.z + playerHalfWidth)
     );
     
@@ -593,10 +595,7 @@ function animate() {
     //np
     if(locationNP){
         if(onBus){
-            // Looking around the bus
-            if(controls.getObject().rotation.y <= -0.4){
-                controls.getObject().rotation.y += delta *1.5;
-            }
+            controls.lock();
         }
         // Cut Scene 1
         else if(busWaiting){
