@@ -173,7 +173,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
 }
 
 // NEW: Function specifically for stairs
-function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain) {
+function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") {
     const stairData = {
         name: name,
         box: new THREE.Box3(
@@ -182,7 +182,8 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain) {
         ),
         heightGain: heightGain,
         startY: y - sizeY / 2,
-        endY: y + sizeY / 2
+        endY: y + sizeY / 2,
+        axis: axis
     };
     
     stairs.push(stairData);
@@ -244,11 +245,11 @@ function createCHC(){
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 140, 1, 140);
     addCollider("smallStairFloor", 135, -12, 0, 28, 1, 32);
-    addCollider("smallStairFloor2", 135, -8, -30, 28, 1, 32);
+    addCollider("smallStairFloor2", 135, -10, -30, 28, 1, 32);
 
     //stairColliders
-    addStairs("smallEntranceStairs", 120, 2, 0, 8, 6, 32, 8);
-    addStairs("smallEntranceStairs", 135, 6, -15, 25, 4, 4, 4);
+    addStairs("smallEntranceStairs", 120, 2, 0, 8, 6, 32, 8, "x+");
+    addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
 
     //CHC Model
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
@@ -329,7 +330,7 @@ controls.addEventListener('unlock', () => { /* pointer unlocked */ });
 
 const playerPos = controls.getObject()
 const playerHeight = 2.1;
-const playerHalfWidth = 0.5;
+const playerHalfWidth = 1.05;
 
 const velocity = new THREE.Vector3();
 
@@ -337,7 +338,7 @@ const speed = 0.3;
 const gravity = 0.05;
 
 //Player Start Position and Camera
-camera.position.set(0,2,15);
+camera.position.set(0,2.1,15);
 playerPos.rotation.y = Math.PI / -2;
 
 //Time
@@ -535,7 +536,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 10, 10);
+            controls.getObject().position.set(0, 1.5, 10);
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -610,7 +611,25 @@ function animate() {
         controls.moveRight(velocity.x);
         
         if (stairAtNewPos) {
-            const stairProgress = (newPos.x - stairAtNewPos.box.min.x) / (stairAtNewPos.box.max.x - stairAtNewPos.box.min.x);
+            let stairProgress = 0;
+
+            switch (stairAtNewPos.axis) {
+                case "x+":
+                    stairProgress = (newPos.x - stairAtNewPos.box.min.x) / (stairAtNewPos.box.max.x - stairAtNewPos.box.min.x);
+                    break;
+                case "x-":
+                    stairProgress = (stairAtNewPos.box.max.x - newPos.x) / (stairAtNewPos.box.max.x - stairAtNewPos.box.min.x);
+                    break;
+                case "z+":
+                    stairProgress = (newPos.z - stairAtNewPos.box.min.z) / (stairAtNewPos.box.max.z - stairAtNewPos.box.min.z);
+                    break;
+                case "z-":
+                    stairProgress = (stairAtNewPos.box.max.z - newPos.z) / (stairAtNewPos.box.max.z - stairAtNewPos.box.min.z);
+                    break;
+            }
+
+            stairProgress = THREE.MathUtils.clamp(stairProgress, 0, 1);
+
             const targetHeight = stairAtNewPos.startY + (stairAtNewPos.heightGain * stairProgress);
             
             const currentY = controls.getObject().position.y;
