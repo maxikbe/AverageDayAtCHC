@@ -241,7 +241,7 @@ function createCHC(){
 
     //BOTTOM Floor
         //outside
-    addCollider("OutOfSchoolFloor", 50, -18 , -20, 140, 1, 140);
+    addCollider("OutOfSchoolFloor", 50, -18 , -20, 160, 1, 140);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
         //doors
     addCollider("MainCHCDoor", 65, 0, 0, 1, 30, 30);
@@ -249,9 +249,11 @@ function createCHC(){
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
         //floors
     addCollider("smallStairFloor1", 135, -12, 0, 28, 1, 32);
-    addCollider("smallStairFloor2", 135, 2, 20, 28, 1, 32);
+    addCollider("smallStairFloor2", 135, -10, -30, 28, 1, 32);
     addCollider("smallStairFloor3", 80, -13, 30, 32, 1, 20);
+    addCollider("FloorLockers", 105, -13, 105, 85   , 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
+        //furniture
 
     //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
@@ -276,11 +278,33 @@ function createCHC(){
     addCollider("midFloor3", 130, 72, -30, 35, 1, 32);
 
     //CHC Model
+        //school
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
+        //furniture
+        //lockers
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 50], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 56], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 62], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [141, 0, 68], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [141, 0, 74], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("playerLocker", "./models/LockerInside.glb", [141, 0, 80], [3,2.5,3], [0, Math.PI / 2, 0]); //PlayerLocker
+    loadModel("playerLockerDoor", "./models/LockerDoor.glb", [141, 0, 80], [3,2.5,3], [0, Math.PI / 2, 0]); //PlayerLocker Door
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 86], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 92], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 98], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [141, 0, 128], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [141, 0, 134], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [141, 0, 140], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 146], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 152], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 158], [3,2.5,3], [0, Math.PI / 2, 0]);
+        //benches
+    loadModel("Bench", "./models/lockerBench.glb", [141, -14.5, 113], [3.75, 3, 3], [0, Math.PI / 2, 0]);
+    
 }
 
 // GROUND type CHECK
-const raycaster = new THREE.Raycaster();
+const raycaster = new THREE.Raycaster();    
 const down = new THREE.Vector3(0, -1, 0);
 
 function getObjectBelowPlayer() {
