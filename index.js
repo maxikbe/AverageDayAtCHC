@@ -34,8 +34,6 @@ const sun = new THREE.DirectionalLight(0xffffff, 1);
 sun.position.set(5, 10, 5);
 scene.add(sun);
 
-// FOG
-scene.fog = new THREE.Fog("rgb(97, 97, 97)", 20, 300); 
 
 // SKY
 const day = 'rgba(116, 170, 232, 1)';
@@ -204,6 +202,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
 }
 
 function createNP(){
+    // FOG
+    scene.fog = new THREE.Fog("rgb(97, 97, 97)", 20, 300); 
+
     //Namesti Prace Colliders
     addCollider("floorNp", 30, -18, 0, 75, 1, 120); // Side Walk Floor // z = from middle pillar to left // x = From edge to edge
     addCollider("trashCanNP", 43.1, 0, -27.5, 8, 20, 8); //Trash Can
@@ -237,7 +238,12 @@ function createNP(){
 }
 
 function createCHC(){
+    // FOG
+    scene.fog = null; 
+
     //CHC Colliders
+
+    addCollider("BIGschoolwall", 65, 60, 70, 2, 80, 240);
 
     //BOTTOM Floor
         //outside
@@ -251,7 +257,7 @@ function createCHC(){
     addCollider("DownStairsPillarM", 81.8, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarL", 96, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarR", 67, -13, 40, 3, 50, 2);
-    addCollider("WallLockers1", 65, -13, 117, 3, 50, 105);
+    addCollider("WallLockers1", 65, -13, 117, 3, 50, 105.5);
     addCollider("WallLockers2", 100, -13, 170, 100, 50, 3);
         //floors
     addCollider("smallStairFloor1", 135, -12, 0, 28, 1, 32);
