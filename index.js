@@ -31,7 +31,7 @@ const ambient = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambient);
 
 const sun = new THREE.DirectionalLight(0xffffff, 1);
-sun.position.set(5, 10, 5);
+sun.position.set(0, 50, 0);
 scene.add(sun);
 
 
@@ -249,10 +249,12 @@ function createCHC(){
         //outside
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 160, 1, 140);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
+    addCollider("Pillar1", 62, 0, -18.5, 5, 30, 6);
         //doors
     addCollider("MainCHCDoor", 65, 0, 0, 2, 30, 30);
         //walls
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
+    addCollider("WallNextToDoorLeft", 65, 0, 31, 2, 30, 35);
     addCollider("DownStairsWall", 123, -13, 28, 55, 50, 25);
     addCollider("DownStairsPillarM", 81.8, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarL", 96, -13, 40, 2.4, 50, 2);
