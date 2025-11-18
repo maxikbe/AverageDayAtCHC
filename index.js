@@ -25,6 +25,8 @@ let myBus = null;
 
 // COLs
 let myBusFloor = null;
+let MainCHCDoor = null;
+let LockerInteract = null;
 
 //Doors
 let inMainCHCDoor = false;
@@ -163,23 +165,22 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     colliders.push(box);
     colliders[name] = box;
 
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true,
+        wireframe: true, // false
         transparent: true,
-        opacity: 0.3
+        opacity: 0.3 // 0
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
-    mesh.name = `collider_vis_${name}`;
+    mesh.name = `collider_${name}`;
     colliderVisuals.add(mesh);
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
 
     //COL DEFINICIONS
     if (name === "busFloor") myBusFloor = box;
-    if (name === "playerLockerDoor") playerLockerDoorModel = model;
+    if (name === "MainCHCDoor") MainCHCDoor = box;
+    if (name === "LockerInteract") LockerInteract = box;
 }
 
 // NEW: Function specifically for stairs
@@ -198,19 +199,18 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     
     stairs.push(stairData);
 
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: true,
+        wireframe: true, // false
         transparent: true,
-        opacity: 0.5
+        opacity: 0.5// 0
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
-    mesh.name = `stair_vis_${name}`;
+    mesh.name = `stair_${name}`;
     colliderVisuals.add(mesh);
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
+    
 }
 
 function createNP(){
@@ -451,9 +451,8 @@ const transBG = document.getElementById("Transition");
 
 // RENDER LOOP
 function animate() {
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
     colliderVisuals.children.forEach(mesh => {
-        const name = mesh.name.replace('collider_vis_', '').replace('stair_vis_', '');
+        const name = mesh.name.replace('collider_', '').replace('stair_', '');
         const box = colliders[name];
         if (box) {
             const center = new THREE.Vector3();
@@ -468,7 +467,6 @@ function animate() {
             );
         }
     });
-    //DEBUG ONLY ----------------------------------------------------------------------- DELETE
 
     detectLookedCollider();
     requestAnimationFrame(animate);
@@ -645,8 +643,9 @@ function animate() {
         }   
 
         // DOORS AND INTERACTABLES CONTROLERS
+        console.log(lookedCollider);
         switch (lookedCollider){
-            case "collider_vis_MainCHCDoor":
+            case "collider_MainCHCDoor":
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
                     if(!inMainCHCDoor){
@@ -660,7 +659,7 @@ function animate() {
                     }
                 }
                 break;
-            case "collider_vis_LockerInteract":
+            case "collider_LockerInteract":
                 if(!LockerOpened){
                     interactionE.style.zIndex = 99;  
                 }else{
