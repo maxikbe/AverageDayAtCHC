@@ -6,3 +6,40 @@ body {
 canvas { 
     display: block; 
 }
+
+.locker {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none;
+}
+
+.locker-container {
+    background: url("imgs/locker.jpg") center/cover no-repeat;
+    position: relative;
+    width: 50vw;
+    height: 90vh;
+}
+
+#boots {
+    width: 120px;
+    position: absolute;
+    left: 50px;
+    bottom: 50px;
+    cursor: grab;
+    z-index: 1001;
+}
+
+#slot {
+    width: 130px;
+    height: 130px;
+    border: 2px dashed white;
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+}

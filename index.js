@@ -12,6 +12,9 @@ document.body.appendChild(renderer.domElement);
 let locationNP = false;
 let locationCHC = true;
 
+//Story Parts
+let CHCpart1 = true;
+
 // LOCATION CREATING
 let createdCHC = false;
 let createdNP = false;
@@ -26,6 +29,9 @@ let myBusFloor = null;
 //Doors
 let inMainCHCDoor = false;
 
+//GUI
+let LockerOpened = false;
+
 // LIGHTS
 const ambient = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambient);
@@ -34,6 +40,11 @@ const sun = new THREE.DirectionalLight(0xffffff, 1);
 sun.position.set(0, 50, 0);
 scene.add(sun);
 
+// HTML imports
+const lockerUI = document.querySelector('.locker');
+const container = document.querySelector('.locker-container');
+const slot = document.getElementById('slot');
+const bootsImg = document.getElementById('boots');
 
 // SKY
 const day = 'rgba(116, 170, 232, 1)';
@@ -168,6 +179,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
 
     //COL DEFINICIONS
     if (name === "busFloor") myBusFloor = box;
+    if (name === "playerLockerDoor") playerLockerDoorModel = model;
 }
 
 // NEW: Function specifically for stairs
@@ -241,9 +253,12 @@ function createCHC(){
     // FOG
     scene.fog = null; 
 
+    //CHC Progress Barriers
+    addCollider("BarrierPart1", 100, 0, 0, 2, 30, 60);
+
     //CHC Colliders
 
-    addCollider("BIGschoolwall", 65, 60, 70, 2, 80, 240);
+    addCollider("BigSchoolWall", 65, 60, 70, 2, 80, 240);
 
     //BOTTOM Floor
         //outside
@@ -253,8 +268,9 @@ function createCHC(){
         //doors
     addCollider("MainCHCDoor", 65, 0, 0, 2, 30, 30);
         //walls
+    addCollider("UnderStairs", 92, 0, -17, 58, 30, 2);
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
-    addCollider("WallNextToDoorLeft", 65, 0, 31, 2, 30, 35);
+    addCollider("WallNextToDoorLeft", 65, 0, -31, 2, 30, 30);
     addCollider("DownStairsWall", 123, -13, 28, 55, 50, 25);
     addCollider("DownStairsPillarM", 81.8, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarL", 96, -13, 40, 2.4, 50, 2);
@@ -269,6 +285,8 @@ function createCHC(){
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
+        //interactables
+    addCollider("LockerInteract", 144.5 , -13, 86, 15, 50, 5);
     //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -381,13 +399,16 @@ scene.add(controls.getObject());
 
 //controls unlock
 let canMove = false;
+let cutsceneActive = false;
 
 document.addEventListener('click', () => {
-  controls.lock();
+    if (!cutsceneActive) {
+        controls.lock();
+    }
 });
 
-controls.addEventListener('lock', () => { /* pointer locked */ });
-controls.addEventListener('unlock', () => { /* pointer unlocked */ });
+controls.addEventListener('lock', () => {});
+controls.addEventListener('unlock', () => {});
 
 //Player Settings
 
@@ -421,6 +442,7 @@ let didRodeToSchool = false;
 //Story
 let cutScene1Finnished = false;
 let onBus = false;
+let item1Snapped = false;
 
 //Interaction global
 const interactionE = document.getElementById("interaction");
@@ -462,7 +484,6 @@ function animate() {
     // --- Namesti Prace START ---
     if (locationNP){
         if(!createdNP){
-            controls.lock();
             createSnow();
             createNP();
             createdNP = true; 
@@ -616,7 +637,14 @@ function animate() {
                 transBG.style.background = 'rgba(0,0,0,0)';
             }
         }
-        // DOORS CONTROLERS
+
+        if(item1Snapped){
+            lockerUI.style.display = 'none';
+            canMove = true;
+            cutsceneActive = false;
+        }   
+
+        // DOORS AND INTERACTABLES CONTROLERS
         switch (lookedCollider){
             case "collider_vis_MainCHCDoor":
                 interactionE.style.zIndex = 99;
@@ -630,6 +658,61 @@ function animate() {
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.x -= 20;
                     }
+                }
+                break;
+            case "collider_vis_LockerInteract":
+                if(!LockerOpened){
+                    interactionE.style.zIndex = 99;  
+                }else{
+                    interactionE.style.zIndex = -99;
+                }
+                if(KeyPressed == "KeyE" && !LockerOpened){
+                    LockerOpened = true;
+                    canMove = false;
+                    velocity.x = 0;
+                    velocity.z = 0;
+                    cutsceneActive = true;
+                    controls.unlock();
+
+                    // locker minigame
+
+                    lockerUI.style.display = 'flex';
+
+                    // Drag logic
+                    let dragging = false;
+                    let offsetX = 0, offsetY = 0;
+
+                    bootsImg.addEventListener('mousedown', e => {
+                    dragging = true;
+                    const rect = container.getBoundingClientRect();
+                        offsetX = e.clientX - bootsImg.offsetLeft - rect.left;
+                        offsetY = e.clientY - bootsImg.offsetTop - rect.top;
+                    });
+
+                    document.addEventListener('mousemove', e => {
+                        if (!dragging) return;
+                        const rect = container.getBoundingClientRect();
+                        bootsImg.style.left = (e.clientX - rect.left - offsetX) + 'px';
+                        bootsImg.style.top = (e.clientY - rect.top - offsetY) + 'px';
+                    });
+
+                    document.addEventListener('mouseup', () => {
+                        if (!dragging) return;
+                            dragging = false;
+
+                            const slotRect = slot.getBoundingClientRect();
+                            const bootsRect = bootsImg.getBoundingClientRect();
+
+                            const containerRect = container.getBoundingClientRect();
+                            const dx = (bootsRect.left - containerRect.left) - (slotRect.left - containerRect.left);
+                            const dy = (bootsRect.top - containerRect.top) - (slotRect.top - containerRect.top);
+
+                        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
+                            bootsImg.style.left = (slotRect.left - containerRect.left) + 'px';
+                            bootsImg.style.top = (slotRect.top - containerRect.top) + 'px';
+                            item1Snapped = true;
+                        }
+                    });
                 }
                 break;
             default:
@@ -743,7 +826,7 @@ function animate() {
     //np
     if(locationNP){
         if(onBus){
-            controls.lock();
+            cutsceneActive = false;
         }
         // Cut Scene 1
         else if(busWaiting){
@@ -760,6 +843,7 @@ function animate() {
                 }
             }
         } else{
+            cutsceneActive = true;
             // Looking for a bus
             if(myBus.position.z >= -400 && myBus.position.z <= 0){
                 if(myBus.position.z <= -200){
@@ -769,6 +853,11 @@ function animate() {
                 }
             }
         }    
+    }
+    if(locationCHC){
+        if(CHCpart1){
+            //Put your things into your locker
+        }
     }
 
     renderer.render(scene, camera);
