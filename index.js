@@ -27,6 +27,7 @@ let myBus = null;
 let myBusFloor = null;
 let MainCHCDoor = null;
 let LockerInteract = null;
+let BarrierPart1 = null;
 
 //Doors
 let inMainCHCDoor = false;
@@ -181,6 +182,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "busFloor") myBusFloor = box;
     if (name === "MainCHCDoor") MainCHCDoor = box;
     if (name === "LockerInteract") LockerInteract = box;
+    if (name === "BarrierPart1") BarrierPart1 = box;
 }
 
 // NEW: Function specifically for stairs
@@ -204,7 +206,7 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
         color: 0xff00ff,
         wireframe: true, // false
         transparent: true,
-        opacity: 0.5// 0
+        opacity: 0.5 // 0
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -640,6 +642,16 @@ function animate() {
             lockerUI.style.display = 'none';
             canMove = true;
             cutsceneActive = false;
+            if (BarrierPart1) {
+                const deltaY = -100;
+                BarrierPart1.min.y += deltaY;
+                BarrierPart1.max.y += deltaY;
+            }
+
+            const mesh = colliderVisuals.getObjectByName('collider_BarrierPart1');
+            if (mesh) {
+                mesh.position.y -= 100;
+            }
         }   
 
         // DOORS AND INTERACTABLES CONTROLERS

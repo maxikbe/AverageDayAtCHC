@@ -1,10 +1,26 @@
-body { 
-    margin: 0; 
-    overflow: hidden; 
-    background: #000; 
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    width: 100vw;
+    height: 100vh;
 }
+
 canvas { 
     display: block; 
+    width: 100%;
+    height: 100%;
+}
+
+#Transition, #interaction {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
 }
 
 .locker {
@@ -20,26 +36,27 @@ canvas {
 }
 
 .locker-container {
-    background: url("imgs/locker.jpg") center/cover no-repeat;
-    position: relative;
     width: 50vw;
-    height: 90vh;
+    aspect-ratio: 1 / 1.8;
+    height: auto;
+    background: url("imgs/locker.jpg") center/contain no-repeat;
+    position: relative;
 }
 
 #boots {
-    width: 120px;
     position: absolute;
-    left: 50px;
-    bottom: 50px;
+    width: 15%;
+    aspect-ratio: 1;
+    top: 50%;
+    left: 5%;
     cursor: grab;
-    z-index: 1001;
 }
 
 #slot {
-    width: 130px;
-    height: 130px;
-    border: 2px dashed white;
+    width: 15%;
+    aspect-ratio: 1;
     position: absolute;
-    right: 50px;
-    bottom: 50px;
+    top: 75%;
+    left: 75%;
+    border: 2px dashed white;
 }
