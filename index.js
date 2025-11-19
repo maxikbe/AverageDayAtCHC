@@ -653,9 +653,8 @@ function animate() {
                 mesh.position.y -= 100;
             }
         }   
-
+        
         // DOORS AND INTERACTABLES CONTROLERS
-        console.log(lookedCollider);
         switch (lookedCollider){
             case "collider_MainCHCDoor":
                 interactionE.style.zIndex = 99;
