@@ -12,6 +12,9 @@ document.body.appendChild(renderer.domElement);
 let locationNP = false;
 let locationCHC = true;
 
+// Settings
+let barriersOn = false;
+
 //Story Parts
 let CHCpart1 = true;
 
@@ -256,8 +259,10 @@ function createCHC(){
     scene.fog = null; 
 
     //CHC Progress Barriers
-    addCollider("BarrierPart1", 100, 0, 0, 2, 30, 60);
-
+    if(barriersOn){
+        addCollider("BarrierPart1", 100, 0, 0, 2, 30, 60);
+    }
+    
     //CHC Colliders
 
     addCollider("BigSchoolWall", 65, 60, 70, 2, 80, 240);
@@ -301,6 +306,7 @@ function createCHC(){
     addCollider("midFloor2", 126, 40, -5, 40, 1, 20);
     addCollider("midFloor3", 130, 40, -30, 35, 1, 32);
     addCollider("midFloor4", 67, 60, -20, 28, 1, 50);
+    addCollider("hallfloor", 165, 40, 180, 200, 1, 350);
 
     //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
