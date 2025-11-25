@@ -30,11 +30,13 @@ let myBus = null;
 // COLs
 let myBusFloor = null;
 let MainCHCDoor = null;
+let GamaDoor = null;
 let LockerInteract = null;
 let BarrierPart1 = null;
 
 //Doors
 let inMainCHCDoor = false;
+let inGamaDoor = false;
 
 //GUI
 let LockerOpened = false;
@@ -191,6 +193,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     //COL DEFINICIONS
     if (name === "busFloor") myBusFloor = box;
     if (name === "MainCHCDoor") MainCHCDoor = box;
+    if (name === "GamaDoor") GamaDoor = box;
     if (name === "LockerInteract") LockerInteract = box;
     if (name === "BarrierPart1") BarrierPart1 = box;
 }
@@ -324,6 +327,8 @@ function createCHC(){
     addCollider("wallLongHallLeft", 146, 40, 203, 1, 60, 350);
     addCollider("wallLongHallEnd", 105, 40, 327, 100, 60, 1);
     addCollider("wallStairs", 146, 40, -20, 1, 60, 50);
+        //doors
+    addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
 
     //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
@@ -644,7 +649,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 100, 50, 100
+            controls.getObject().position.set(140, 55, 100); //Normal 0, 1.5, 10 //Debug // 140, 55, 100
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -740,6 +745,20 @@ function animate() {
                             item1Snapped = true;
                         }
                     });
+                }
+                break;
+            case 'collider_GamaDoor':
+                interactionE.style.zIndex = 99;
+                if(KeyPressed == "KeyE"){
+                    if(!inGamaDoor){
+                        inGamaDoor = true;
+                        interactionE.style.zIndex = -99;
+                        controls.getObject().position.x -= 15;
+                    } else{
+                        inGamaDoor = false;
+                        interactionE.style.zIndex = -99;
+                        controls.getObject().position.x += 15;
+                    }
                 }
                 break;
             default:
