@@ -17,6 +17,7 @@ let barriersOn = false;
 
 //Story Parts
 let CHCpart1 = true;
+let CHCpart2 = false;
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -104,6 +105,12 @@ function cleanModels(){
     for (const key in models) {
         delete models[key];
     }
+}
+
+// quests_text creator
+function quests_text(text){
+    const el = document.getElementById("quests_text");
+    if (el && el.textContent !== "To do: "+text) el.textContent = "To do: "+text;
 }
 
 // Raycast - What is camera looking at
@@ -271,11 +278,16 @@ function createCHC(){
         //outside
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 160, 1, 140);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
+    addCollider("GreyBrickWallSmall", 63, 0, 17, 5, 30, 5);
+    addCollider("SmallPillar", 63, 0, 22, 2, 30, 5);
     addCollider("Pillar1", 62, 0, -18.5, 5, 30, 6);
+    addCollider("KitchenWallPillar", 17.4, 0, 38, 8.8, 30, 3);
         //doors
-    addCollider("MainCHCDoor", 65, 0, 0, 2, 30, 30);
+    addCollider("MainCHCDoor", 65, 0, -0.5, 2, 30, 30.5);
         //walls
-    addCollider("UnderStairs", 92, 0, -17, 58, 30, 2);
+    addCollider("KitchenWall", 10, 0, 39.5, 110, 30, 2);
+    addCollider("UnderStairs", 92, 0, -18, 58, 30, 5);
+    addCollider("StairsWall", 96, 65, -18, 36, 150, 5);
     addCollider("WallNextToDoorRight", 65, 0, 31, 2, 30, 35);
     addCollider("WallNextToDoorLeft", 65, 0, -31, 2, 30, 30);
     addCollider("DownStairsWall", 123, -13, 28, 55, 50, 25);
@@ -307,6 +319,11 @@ function createCHC(){
     addCollider("midFloor3", 130, 40, -30, 35, 1, 32);
     addCollider("midFloor4", 67, 60, -20, 28, 1, 50);
     addCollider("hallfloor", 165, 40, 180, 200, 1, 350);
+        //walls
+    addCollider("wallLongHallRight", 125, 40, 179, 1, 60, 350);
+    addCollider("wallLongHallLeft", 146, 40, 203, 1, 60, 350);
+    addCollider("wallLongHallEnd", 105, 40, 327, 100, 60, 1);
+    addCollider("wallStairs", 146, 40, -20, 1, 60, 50);
 
     //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
@@ -459,6 +476,7 @@ const transBG = document.getElementById("Transition");
 
 // RENDER LOOP
 function animate() {
+    //console.log(lookedCollider); // DEBUG
     colliderVisuals.children.forEach(mesh => {
         const name = mesh.name.replace('collider_', '').replace('stair_', '');
         const box = colliders[name];
@@ -626,7 +644,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10);
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 100, 50, 100
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -648,16 +666,9 @@ function animate() {
             lockerUI.style.display = 'none';
             canMove = true;
             cutsceneActive = false;
-            if (BarrierPart1) {
-                const deltaY = -100;
-                BarrierPart1.min.y += deltaY;
-                BarrierPart1.max.y += deltaY;
-            }
-
-            const mesh = colliderVisuals.getObjectByName('collider_BarrierPart1');
-            if (mesh) {
-                mesh.position.y -= 100;
-            }
+            
+            CHCpart1 = false;
+            CHCpart2 = true;
         }   
         
         // DOORS AND INTERACTABLES CONTROLERS
@@ -842,10 +853,12 @@ function animate() {
     //np
     if(locationNP){
         if(onBus){
+            quests_text("")
             cutsceneActive = false;
         }
         // Cut Scene 1
         else if(busWaiting){
+            quests_text("Get on the bus")
             // Walking to bus
             if(controls.getObject().position.x < 55){
                 controls.getObject().position.x += delta *15;
@@ -859,6 +872,7 @@ function animate() {
                 }
             }
         } else{
+            quests_text("Wait for the bus");
             cutsceneActive = true;
             // Looking for a bus
             if(myBus.position.z >= -400 && myBus.position.z <= 0){
@@ -872,7 +886,21 @@ function animate() {
     }
     if(locationCHC){
         if(CHCpart1){
+            quests_text("Put your stuff into the locker")
             //Put your things into your locker
+        }
+        if(CHCpart2){
+            quests_text("Get to your first class - 1st floor, Gama")
+            //Get to first class
+            if (BarrierPart1) {
+                const deltaY = -100;
+                BarrierPart1.min.y += deltaY;
+                BarrierPart1.max.y += deltaY;
+            }
+            const mesh = colliderVisuals.getObjectByName('collider_BarrierPart1');
+            if (mesh) {
+                mesh.position.y -= 100;
+            }
         }
     }
 
