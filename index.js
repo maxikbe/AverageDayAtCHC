@@ -181,9 +181,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true, // false
+        wireframe: false, // false   // DEBUG
         transparent: true,
-        opacity: 0.3 // 0
+        opacity: 0 // 0    // DEBUG
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -217,9 +217,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: true, // false
-        transparent: true,
-        opacity: 0.5 // 0
+        wireframe: false, // false  // DEBUG
+        transparent: true,   
+        opacity: 0 // 0    // DEBUG
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -344,6 +344,14 @@ function createCHC(){
         //school
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
         //furniture
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 298], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 298], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 311], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 311], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 324], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 324], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
         //lockers
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 50], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 56], [3,2.5,3], [0, Math.PI / 2, 0]);
@@ -649,7 +657,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(140, 55, 100); //Normal 0, 1.5, 10 //Debug // 140, 55, 100
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
