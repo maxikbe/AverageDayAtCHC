@@ -612,11 +612,10 @@ function endSleepGame(success) {
         CHCpart3 = true;
         
         // enable player movement
+        controls.getObject().position.set(104, 56, 300); //OutOfChair
         canMove = true;
         cutsceneActive = false;
         controls.lock();
-
-        controls.getObject().position.set(104, 56, 300); //OutOfChair
         onChairGama = false;
 
     } else {
@@ -625,10 +624,10 @@ function endSleepGame(success) {
         
         setTimeout(() => {
             // enable player movement
+            controls.getObject().position.set(104, 56, 300); //OutOfChair
             canMove = true;
             cutsceneActive = false;
             controls.lock();
-            controls.getObject().position.set(104, 56, 300); //OutOfChair
             onChairGama = false;
         }, 1500); // Wait 1.5s
     }
@@ -935,13 +934,14 @@ function animate() {
                 if(KeyPressed == "KeyE"){
                     interactionE.style.zIndex = -99;
                     if(!onChairGama){
+                        controls.unlock();
                         onChairGama = true;
                         velocity.x = 0;
                         velocity.z = 0;
+                        controls.getObject().position.set(119.5, 50, 298);
                         controls.getObject().rotation.x = 0;
                         controls.getObject().rotation.y = Math.PI /5;
                         controls.getObject().rotation.z = 0;
-                        controls.getObject().position.set(119.5, 50, 298);
                         canMove = false;
                         cutsceneActive = true;
                         startSleepGame();
