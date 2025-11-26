@@ -2,6 +2,8 @@ import * as THREE from 'https://esm.sh/three@0.161.0';
 import { GLTFLoader } from 'https://esm.sh/three@0.161.0/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'https://esm.sh/three@0.161.0/examples/jsm/controls/PointerLockControls.js';
 
+// DEBUG MODE --> ctrl + h ---> Find: "//DEBUG//" ---> Replace: " " ---> Replace All
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -16,8 +18,8 @@ let locationCHC = true;
 let barriersOn = false;
 
 //Story Parts
-let CHCpart1 = true;
-let CHCpart2 = false;
+let CHCpart1 = false;
+let CHCpart2 = true;
 let CHCpart3 = false;
 let CHCpartEND = false;
 
@@ -177,7 +179,7 @@ function loadModel(name, path, position = [0, 0, 0], scale = [1, 1, 1], rotation
             model.rotation.set(...rotation);
             scene.add(model);
             models[name] = model;
-            console.log(`${name} loaded!`);
+            //DEBUG//console.log(`Model: ${name} loaded!`); 
 
             //OBJ DEFINICIONS
             if (name === "car") myCarRed = model;
@@ -205,6 +207,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     box.name = name;
     colliders.push(box);
     colliders[name] = box;
+    //DEBUG//console.log(`Collider: ${name} loaded!`); 
 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
@@ -216,6 +219,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     mesh.name = `collider_${name}`;
+    //DEBUG//console.log(`Mesh: ${name} loaded!`); 
     colliderVisuals.add(mesh);
 
     //COL DEFINICIONS
@@ -525,9 +529,114 @@ const interactionE = document.getElementById("interaction");
 //Transition global
 const transBG = document.getElementById("Transition");
 
+// SLEEP GAME
+// sleep game variables
+let sleepGameActive = false;
+let gameScore = 0;
+const requiredScore = 5;
+const possibleKeys = ['A', 'S', 'D', 'W', 'E', 'F', 'J', 'K', 'L'];
+let currentKey = '';
+let keyPressTimeout = null;
+const timeLimit = 2500;
+let gameFailed = false;
+const sleepGameUI = document.getElementById('sleep-game-ui');
+const sleepPrompt = document.getElementById('sleep-prompt');
+const sleepMessage = document.getElementById('sleep-message');
+
+// check for right key
+document.addEventListener('keydown', (e) => {
+    if (!sleepGameActive) return;
+    
+    const pressedKey = e.code.replace('Key', '');
+    //DEBUG//console.log(pressedKey) 
+    if (pressedKey === currentKey) {
+        gameScore++;
+        //DEBUG//console.log("U press the right key!!!") 
+        sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
+        generateNewKey();
+    } else {
+        alert_text(`Wrong key: ${pressedKey}`);
+        endSleepGame(false)
+    }
+});
+
+// sleep game
+function startSleepGame() {
+    sleepGameActive = true;
+    gameFailed = false;
+    gameScore = 0;
+    sleepGameUI.style.display = 'flex';
+    sleepGameUI.style.flexDirection = 'column';
+    sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
+    generateNewKey();
+}
+
+// function generate key
+function generateNewKey() {
+    if (gameFailed || !sleepGameActive) return;
+
+    if (keyPressTimeout) clearTimeout(keyPressTimeout);
+
+    // Check for win
+    if (gameScore >= requiredScore) {
+        endSleepGame(true);
+        //DEBUG//console.log("U won the game!!!") 
+        return;
+    }
+
+    // new random key
+    const randomIndex = Math.floor(Math.random() * possibleKeys.length);
+    currentKey = possibleKeys[randomIndex];
+    sleepPrompt.innerHTML = `Press **${currentKey}**!`;
+
+    // timeout for key press failure
+    keyPressTimeout = setTimeout(() => {
+        if (sleepGameActive) {
+            endSleepGame(false);
+            //DEBUG//console.log("U lost the game!!!") 
+        }
+    }, timeLimit);
+}
+
+// Function end sleep game
+function endSleepGame(success) {
+    if (keyPressTimeout) clearTimeout(keyPressTimeout);
+    sleepGameActive = false;
+    currentKey = '';
+    sleepPrompt.textContent = '';
+    sleepGameUI.style.display = 'none';
+
+    if (success) {
+        alert_text("You stayed awake!");
+        CHCpart2 = false;
+        CHCpart3 = true;
+        
+        // enable player movement
+        canMove = true;
+        cutsceneActive = false;
+        controls.lock();
+
+        controls.getObject().position.set(104, 56, 300); //OutOfChair
+        onChairGama = false;
+
+    } else {
+        gameFailed = true;
+        alert_text("You fell asleep! Try again.");
+        
+        setTimeout(() => {
+            // enable player movement
+            canMove = true;
+            cutsceneActive = false;
+            controls.lock();
+            controls.getObject().position.set(104, 56, 300); //OutOfChair
+            onChairGama = false;
+        }, 1500); // Wait 1.5s
+    }
+}
+
 // RENDER LOOP
 function animate() {
-    //console.log(lookedCollider); // DEBUG
+    //DEBUG//console.log(lookedCollider); 
     colliderVisuals.children.forEach(mesh => {
         const name = mesh.name.replace('collider_', '').replace('stair_', '');
         const box = colliders[name];
@@ -829,13 +938,13 @@ function animate() {
                         onChairGama = true;
                         velocity.x = 0;
                         velocity.z = 0;
-                        playerPos.rotation.x = 0;
-                        playerPos.rotation.y = Math.PI /5;
-                        playerPos.rotation.z = 0;
-                        camera.position.set(119.5, 50, 298);
+                        controls.getObject().rotation.x = 0;
+                        controls.getObject().rotation.y = Math.PI /5;
+                        controls.getObject().rotation.z = 0;
+                        controls.getObject().position.set(119.5, 50, 298);
                         canMove = false;
                         cutsceneActive = true;
-                        controls.unlock();
+                        startSleepGame();
                     }
                 }
                 break;
@@ -991,6 +1100,7 @@ function animate() {
             quests_text("Get to your first class - 1st floor, Gama")
             //Get to first class
             if (BarrierPart1) {
+                BarrierPart1 = null;
                 const deltaY = -100;
                 BarrierPart1.min.y += deltaY;
                 BarrierPart1.max.y += deltaY;
@@ -998,6 +1108,9 @@ function animate() {
             const mesh = colliderVisuals.getObjectByName('collider_BarrierPart1');
             if (mesh) {
                 mesh.position.y -= 100;
+            }
+            if(sleepGameActive){
+                sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
             }
         }
     }

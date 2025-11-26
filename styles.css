@@ -65,3 +65,31 @@ canvas {
     transition: opacity 0.3s ease;
     opacity: 0;
 }
+
+.sleep-game-container {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 150px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 3px solid #fff;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-family: sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sleep-prompt {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.sleep-message {
+    font-size: 18px;
+    color: yellow;
+}
