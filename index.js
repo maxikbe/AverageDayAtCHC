@@ -18,6 +18,8 @@ let barriersOn = false;
 //Story Parts
 let CHCpart1 = true;
 let CHCpart2 = false;
+let CHCpart3 = false;
+let CHCpartEND = false;
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -33,10 +35,12 @@ let MainCHCDoor = null;
 let GamaDoor = null;
 let LockerInteract = null;
 let BarrierPart1 = null;
+let ChairColliderPlayer = null;
 
 //Doors
 let inMainCHCDoor = false;
 let inGamaDoor = false;
+let onChairGama = false;
 
 //GUI
 let LockerOpened = false;
@@ -109,10 +113,34 @@ function cleanModels(){
     }
 }
 
+// TEXT TO HTML
 // quests_text creator
 function quests_text(text){
     const el = document.getElementById("quests_text");
+    if (!el) return;
     if (el && el.textContent !== "To do: "+text) el.textContent = "To do: "+text;
+}
+
+// alert_text creator
+let alertCooldown = false;
+function alert_text(text) {
+    if (alertCooldown) return; /// cooldown
+    alertCooldown = true;
+
+    const el = document.getElementById("alert");
+    if (!el) return;
+
+    // Show text
+    el.textContent = text;
+    el.style.opacity = "1";
+
+    setTimeout(() => {
+        el.style.opacity = "0";
+    }, 750);
+
+    setTimeout(() => {
+        alertCooldown = false;
+    }, 1000);
 }
 
 // Raycast - What is camera looking at
@@ -181,9 +209,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: false, // false   // DEBUG
+        wireframe: true, // false   // DEBUG
         transparent: true,
-        opacity: 0 // 0    // DEBUG
+        opacity: 0.5 // 0    // DEBUG
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -196,6 +224,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "GamaDoor") GamaDoor = box;
     if (name === "LockerInteract") LockerInteract = box;
     if (name === "BarrierPart1") BarrierPart1 = box;
+    if (name === "ChairColliderPlayer") ChairColliderPlayer = box;
 }
 
 // NEW: Function specifically for stairs
@@ -217,9 +246,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: false, // false  // DEBUG
+        wireframe: true, // false  // DEBUG
         transparent: true,   
-        opacity: 0 // 0    // DEBUG
+        opacity: 0.5 // 0    // DEBUG
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -306,6 +335,15 @@ function createCHC(){
     addCollider("FloorLockers", 105, -13, 105, 85, 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
+    addCollider("ChairColliderPlayer",119.5, 50, 298, 5,10,7);
+    addCollider("TableCollider",115.8, 50, 291.5, 17.5,10,7);
+    addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,10,14);
+    addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,10,14);
+    addCollider("TableWithChairCollider3",89.8, 50, 308, 17.5,10,14);
+    addCollider("TableWithChairCollider4",115.8, 50, 321, 17.5,10,14);
+    addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,10,14);
+    addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,10,14);
+    addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,10,14);
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
         //interactables
     addCollider("LockerInteract", 144.5 , -13, 86, 15, 50, 5);
@@ -325,7 +363,7 @@ function createCHC(){
         //walls
     addCollider("wallLongHallRight", 125, 40, 179, 1, 60, 350);
     addCollider("wallLongHallLeft", 146, 40, 203, 1, 60, 350);
-    addCollider("wallLongHallEnd", 105, 40, 327, 100, 60, 1);
+    addCollider("wallLongHallEnd", 105, 40, 339, 100, 60, 1);
     addCollider("wallStairs", 146, 40, -20, 1, 60, 50);
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
@@ -687,26 +725,27 @@ function animate() {
         // DOORS AND INTERACTABLES CONTROLERS
         switch (lookedCollider){
             case "collider_MainCHCDoor":
+                // Door Enterance / CHC
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
                     if(!inMainCHCDoor){
                         inMainCHCDoor = true;
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.x += 20;
-                    } else{
+                    } else if(CHCpartEND){
                         inMainCHCDoor = false;
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.x -= 20;
+                    } else{
+                        alert_text("I can´t leave just yet...")
                     }
                 }
                 break;
             case "collider_LockerInteract":
-                if(!LockerOpened){
-                    interactionE.style.zIndex = 99;  
-                }else{
-                    interactionE.style.zIndex = -99;
-                }
+                // Player Locker
+                interactionE.style.zIndex = 99;  
                 if(KeyPressed == "KeyE" && !LockerOpened){
+                    interactionE.style.zIndex = -99;
                     LockerOpened = true;
                     canMove = false;
                     velocity.x = 0;
@@ -753,19 +792,50 @@ function animate() {
                             item1Snapped = true;
                         }
                     });
+                }else if(LockerOpened){
+                    if(CHCpartEND){
+
+                    }else{
+                        alert_text("I don´t need to go there...")
+                    }
                 }
                 break;
             case 'collider_GamaDoor':
+                // Door Gama
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
-                    if(!inGamaDoor){
+                    interactionE.style.zIndex = -99;
+                    if(!inGamaDoor && CHCpart2){
                         inGamaDoor = true;
-                        interactionE.style.zIndex = -99;
                         controls.getObject().position.x -= 15;
-                    } else{
+                    } else if(!CHCpart2){
                         inGamaDoor = false;
-                        interactionE.style.zIndex = -99;
                         controls.getObject().position.x += 15;
+                    } else{
+                        if(CHCpart2){
+                            alert_text("I can´t leave, class is starting soon...")
+                        }else{
+                            alert_text("Someone has class in there!!!")
+                        }
+                    }
+                }
+                break;
+            case 'collider_ChairColliderPlayer':
+                // Chair Gama
+                interactionE.style.zIndex = 99;
+                if(KeyPressed == "KeyE"){
+                    interactionE.style.zIndex = -99;
+                    if(!onChairGama){
+                        onChairGama = true;
+                        velocity.x = 0;
+                        velocity.z = 0;
+                        playerPos.rotation.x = 0;
+                        playerPos.rotation.y = Math.PI /5;
+                        playerPos.rotation.z = 0;
+                        camera.position.set(119.5, 50, 298);
+                        canMove = false;
+                        cutsceneActive = true;
+                        controls.unlock();
                     }
                 }
                 break;
@@ -814,6 +884,7 @@ function animate() {
             let stairProgress = 0;
 
             switch (stairAtNewPos.axis) {
+                //Stairs rotations
                 case "x+":
                     stairProgress = (newPos.x - stairAtNewPos.box.min.x) / (stairAtNewPos.box.max.x - stairAtNewPos.box.min.x);
                     break;

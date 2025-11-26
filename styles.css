@@ -60,3 +60,8 @@ canvas {
     left: 75%;
     border: 2px dashed white;
 }
+
+#alert {
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
