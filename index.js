@@ -21,7 +21,7 @@ let barriersOn = false;
 let CHCpart1 = false;
 let CHCpart2 = true;
 let CHCpart3 = false;
-let CHCpartEND = false;
+let CHCpartEND = true;
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -212,9 +212,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true, // false   // DEBUG
+        wireframe: false, // false   // DEBUG
         transparent: true,
-        opacity: 0.5 // 0    // DEBUG
+        opacity: 0 // 0    // DEBUG
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -259,6 +259,18 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     mesh.name = `stair_${name}`;
     colliderVisuals.add(mesh);
     
+}
+
+// change the collider color
+function changeColliderColor(colliderName, newOpacity) {
+    const visualMeshName = `collider_${colliderName}`;
+
+    const mesh = colliderVisuals.getObjectByName(visualMeshName);
+    
+    if (mesh && mesh.material) {
+        mesh.material.color.setHex(0x00FFD3)
+        mesh.material.opacity = newOpacity
+    }
 }
 
 function createNP(){
@@ -339,15 +351,15 @@ function createCHC(){
     addCollider("FloorLockers", 105, -13, 105, 85, 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
-    addCollider("ChairColliderPlayer",119.5, 50, 298, 5,10,7);
-    addCollider("TableCollider",115.8, 50, 291.5, 17.5,10,7);
-    addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,10,14);
-    addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,10,14);
-    addCollider("TableWithChairCollider3",89.8, 50, 308, 17.5,10,14);
-    addCollider("TableWithChairCollider4",115.8, 50, 321, 17.5,10,14);
-    addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,10,14);
-    addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,10,14);
-    addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,10,14);
+    addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
+    addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
+    addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
+    addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,15,14);
+    addCollider("TableWithChairCollider3",89.8, 50, 308, 17.5,15,14);
+    addCollider("TableWithChairCollider4",115.8, 50, 321, 17.5,15,14);
+    addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,15,14);
+    addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
+    addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
         //interactables
     addCollider("LockerInteract", 144.5 , -13, 86, 15, 50, 5);
@@ -369,6 +381,8 @@ function createCHC(){
     addCollider("wallLongHallLeft", 146, 40, 203, 1, 60, 350);
     addCollider("wallLongHallEnd", 105, 40, 339, 100, 60, 1);
     addCollider("wallStairs", 146, 40, -20, 1, 60, 50);
+    addCollider("gamaWall1", 102.5, 40, 272, 45, 65, 1);
+    addCollider("gamaWall2", 81.5, 40, 280, 1, 60, 100);
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
 
@@ -533,7 +547,7 @@ const transBG = document.getElementById("Transition");
 // sleep game variables
 let sleepGameActive = false;
 let gameScore = 0;
-const requiredScore = 5;
+const requiredScore = 15;
 const possibleKeys = ['A', 'S', 'D', 'W', 'E', 'F', 'J', 'K', 'L'];
 let currentKey = '';
 let keyPressTimeout = null;
@@ -542,6 +556,7 @@ let gameFailed = false;
 const sleepGameUI = document.getElementById('sleep-game-ui');
 const sleepPrompt = document.getElementById('sleep-prompt');
 const sleepMessage = document.getElementById('sleep-message');
+let timeBar = document.getElementById("sleepGameTimeBar");
 
 // check for right key
 document.addEventListener('keydown', (e) => {
@@ -565,6 +580,7 @@ function startSleepGame() {
     sleepGameActive = true;
     gameFailed = false;
     gameScore = 0;
+    timeBar.style.width = '100%'
     sleepGameUI.style.display = 'flex';
     sleepGameUI.style.flexDirection = 'column';
     sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
@@ -574,7 +590,7 @@ function startSleepGame() {
 // function generate key
 function generateNewKey() {
     if (gameFailed || !sleepGameActive) return;
-
+    timeBar.style.width = '100%'
     if (keyPressTimeout) clearTimeout(keyPressTimeout);
 
     // Check for win
@@ -635,7 +651,16 @@ function endSleepGame(success) {
 
 // RENDER LOOP
 function animate() {
+    //sleepGame bar
+    if(sleepGameActive){
+        if(timeLimit){
+            let widthBarNumber = parseFloat(timeBar.style.width);
+            widthBarNumber -= 100/ (60*timeLimit/1000)
+            timeBar.style.width = widthBarNumber + "%";
+        }
+    }
     //DEBUG//console.log(lookedCollider); 
+    //DEBUG//console.log(controls.getObject().position)
     colliderVisuals.children.forEach(mesh => {
         const name = mesh.name.replace('collider_', '').replace('stair_', '');
         const box = colliders[name];
@@ -836,14 +861,16 @@ function animate() {
                 // Door Enterance / CHC
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
-                    if(!inMainCHCDoor){
+                    if(!inMainCHCDoor && CHCpart1){
                         inMainCHCDoor = true;
                         interactionE.style.zIndex = -99;
-                        controls.getObject().position.x += 20;
-                    } else if(CHCpartEND){
+                        controls.getObject().position.set(73, 3.22, 0.35)
+                    } else if(CHCpartEND && inMainCHCDoor){
                         inMainCHCDoor = false;
                         interactionE.style.zIndex = -99;
-                        controls.getObject().position.x -= 20;
+                        controls.getObject().position.set(62, 3.22, 0.35)
+                    } else if(CHCpartEND && !inMainCHCDoor){
+                        alert_text("I need to catch the bus!!!")
                     } else{
                         alert_text("I can´t leave just yet...")
                     }
@@ -900,7 +927,7 @@ function animate() {
                             item1Snapped = true;
                         }
                     });
-                }else if(LockerOpened){
+                }else if(KeyPressed == "KeyE" && LockerOpened){
                     if(CHCpartEND){
 
                     }else{
@@ -915,10 +942,10 @@ function animate() {
                     interactionE.style.zIndex = -99;
                     if(!inGamaDoor && CHCpart2){
                         inGamaDoor = true;
-                        controls.getObject().position.x -= 15;
-                    } else if(!CHCpart2){
+                        controls.getObject().position.set(117.35, 55, 280.5)
+                    } else if(inGamaDoor && !CHCpart2){
                         inGamaDoor = false;
-                        controls.getObject().position.x += 15;
+                        controls.getObject().position.set(128.5, 55, 280.5)
                     } else{
                         if(CHCpart2){
                             alert_text("I can´t leave, class is starting soon...")
@@ -1098,6 +1125,8 @@ function animate() {
         }
         if(CHCpart2){
             quests_text("Get to your first class - 1st floor, Gama")
+            if(!inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0)
+            if(!sleepGameActive && inGamaDoor) changeColliderColor("ChairColliderPlayer", 0.2); else changeColliderColor("ChairColliderPlayer", 0)
             //Get to first class
             if (BarrierPart1) {
                 BarrierPart1 = null;
@@ -1112,6 +1141,9 @@ function animate() {
             if(sleepGameActive){
                 sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
             }
+        }
+        if(CHCpart3){
+            if(inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
         }
     }
 
