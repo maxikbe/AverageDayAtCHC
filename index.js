@@ -611,8 +611,10 @@ const presScore = document.getElementById("presentation-score-ui")
 const presFeedback = document.getElementById("presentation-feedback")
 const presWords = document.getElementById("presentation-words")
 const wordInput = document.getElementById("word-input")
-const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee']
+//presention words
+const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee', 'tak', 'takze', 'realne']
 
+// generate new word
 function generateNewWord(){
     wordInput.value = ""
     presScore.textContent = 'Score: '+ currentPresScore +' / ' +presGoal 
@@ -628,6 +630,7 @@ function generateNewWord(){
     presWords.appendChild(presWord)
 }
 
+// start presenting game
 function startPresentingGame(){
     playedPresentaionGame = true;
     alert_text("You are presenting!")
@@ -651,6 +654,7 @@ function startPresentingGame(){
     }, 2500)
 }
 
+// end presenting game
 function endPresentingGame(sucess){
     presUI.style.display = "none";
     canMove = true;
