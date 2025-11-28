@@ -36,9 +36,9 @@ canvas {
 }
 
 .locker-container {
-    width: 50vw;
+    width: auto;
     aspect-ratio: 1 / 1.8;
-    height: auto;
+    height: 80vh;
     background: url("imgs/locker.jpg") center/contain no-repeat;
     position: relative;
 }
@@ -48,7 +48,7 @@ canvas {
     width: 15%;
     aspect-ratio: 1;
     top: 50%;
-    left: 5%;
+    left: -50%;
     cursor: grab;
 }
 

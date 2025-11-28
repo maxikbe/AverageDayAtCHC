@@ -2,7 +2,7 @@ import * as THREE from 'https://esm.sh/three@0.161.0';
 import { GLTFLoader } from 'https://esm.sh/three@0.161.0/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'https://esm.sh/three@0.161.0/examples/jsm/controls/PointerLockControls.js';
 
-// DEBUG MODE --> ctrl + h ---> Find: "//DEBUG//" ---> Replace: " " ---> Replace All
+// DEBUG MODE (console) --> ctrl + h ---> Find: "//DEBUG//" ---> Replace: " " ---> Replace All
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,13 +15,13 @@ let locationNP = false;
 let locationCHC = true;
 
 // Settings
-let barriersOn = false;
+let barriersOn = false; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = false;
-let CHCpart2 = true;
+let CHCpart1 = true;
+let CHCpart2 = false;
 let CHCpart3 = false;
-let CHCpartEND = true;
+let CHCpartEND = false;
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -212,9 +212,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: false, // false   // DEBUG
+        wireframe: false, // false   // DEBUG true
         transparent: true,
-        opacity: 0 // 0    // DEBUG
+        opacity: 0 // 0    // DEBUG 0.5
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -250,9 +250,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: true, // false  // DEBUG
+        wireframe: false, // false  // DEBUG true
         transparent: true,   
-        opacity: 0.5 // 0    // DEBUG
+        opacity: 0 // 0    // DEBUG 0.3
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
@@ -362,7 +362,7 @@ function createCHC(){
     addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
         //interactables
-    addCollider("LockerInteract", 144.5 , -13, 86, 15, 50, 5);
+    addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
     //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -828,7 +828,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1120,6 +1120,7 @@ function animate() {
     }
     if(locationCHC){
         if(CHCpart1){
+            if(!LockerOpened) changeColliderColor('LockerInteract', 0.2); else changeColliderColor("LockerInteract", 0);
             quests_text("Put your stuff into the locker")
             //Put your things into your locker
         }
