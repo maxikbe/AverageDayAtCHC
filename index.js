@@ -11,11 +11,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
-let barriersOn = false; //true //DEBUG false
+let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -43,6 +43,9 @@ let ChairColliderPlayer = null;
 let inMainCHCDoor = false;
 let inGamaDoor = false;
 let onChairGama = false;
+
+//People
+let addedTeacherGama = false
 
 //GUI
 let LockerOpened = false;
@@ -165,6 +168,29 @@ function detectLookedCollider() {
     }
 }
 
+//Create people
+const people = [];
+function addPerson(name, texturePath, x, y, z, width = 10, height = 20) {
+    const map = new THREE.TextureLoader().load(texturePath);
+    
+    const material = new THREE.MeshBasicMaterial({ 
+        map: map,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true
+    });
+    
+    const geometry = new THREE.PlaneGeometry(width, height);
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.renderOrder = 2;
+    mesh.position.set(x, y + height / 2, z);
+    mesh.name = `person_${name}`; 
+    
+    scene.add(mesh);
+    people.push(mesh); 
+}
+
 // LOAD MODEL - gltf / .glb
 const loader = new GLTFLoader();
 const models = {};
@@ -214,10 +240,12 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
         color: 0x00ff00,
         wireframe: false, // false   // DEBUG true
         transparent: true,
-        opacity: 0 // 0    // DEBUG 0.5
+        opacity: 0, // 0    // DEBUG 0.5
+        depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
+    mesh.renderOrder = 1;
     mesh.name = `collider_${name}`;
     //DEBUG//console.log(`Mesh: ${name} loaded!`); 
     colliderVisuals.add(mesh);
@@ -252,10 +280,12 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
         color: 0xff00ff,
         wireframe: false, // false  // DEBUG true
         transparent: true,   
-        opacity: 0 // 0    // DEBUG 0.3
+        opacity: 0, // 0    // DEBUG 0.3
+        depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
+    mesh.renderOrder = 1;
     mesh.name = `stair_${name}`;
     colliderVisuals.add(mesh);
     
@@ -361,6 +391,20 @@ function createCHC(){
     addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
     addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
+        //people STILL
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
         //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
     //stairColliders
@@ -557,10 +601,12 @@ const sleepGameUI = document.getElementById('sleep-game-ui');
 const sleepPrompt = document.getElementById('sleep-prompt');
 const sleepMessage = document.getElementById('sleep-message');
 let timeBar = document.getElementById("sleepGameTimeBar");
+let canPushButtons = false;
+let playedSleepGame = false;
 
 // check for right key
 document.addEventListener('keydown', (e) => {
-    if (!sleepGameActive) return;
+    if (!sleepGameActive || !canPushButtons) return;
     
     const pressedKey = e.code.replace('Key', '');
     //DEBUG//console.log(pressedKey) 
@@ -577,14 +623,19 @@ document.addEventListener('keydown', (e) => {
 
 // sleep game
 function startSleepGame() {
+    playedSleepGame = true;
+    alert_text("Don´t fall asleep !!!")
     sleepGameActive = true;
-    gameFailed = false;
-    gameScore = 0;
-    timeBar.style.width = '100%'
-    sleepGameUI.style.display = 'flex';
-    sleepGameUI.style.flexDirection = 'column';
-    sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
-    generateNewKey();
+    setTimeout(() => {
+        canPushButtons = true
+        gameFailed = false;
+        gameScore = 0;
+        timeBar.style.width = '100%'
+        sleepGameUI.style.display = 'flex';
+        sleepGameUI.style.flexDirection = 'column';
+        sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
+        generateNewKey();
+    }, 2500)
 }
 
 // function generate key
@@ -618,6 +669,7 @@ function generateNewKey() {
 function endSleepGame(success) {
     if (keyPressTimeout) clearTimeout(keyPressTimeout);
     sleepGameActive = false;
+    canPushButtons = false
     currentKey = '';
     sleepPrompt.textContent = '';
     sleepGameUI.style.display = 'none';
@@ -635,8 +687,11 @@ function endSleepGame(success) {
         onChairGama = false;
 
     } else {
+        playedSleepGame = false;
         gameFailed = true;
-        alert_text("You fell asleep! Try again.");
+        setTimeout(() => {
+            alert_text("You fell asleep! Try again.");
+        }, 1000);
         
         setTimeout(() => {
             // enable player movement
@@ -659,6 +714,13 @@ function animate() {
             timeBar.style.width = widthBarNumber + "%";
         }
     }
+    
+    //People allways rotate / look at player
+    people.forEach(mesh => {
+    const playerPosition = controls.getObject().position;
+    mesh.lookAt(playerPosition.x, mesh.position.y, playerPosition.z);
+    });
+
     //DEBUG//console.log(lookedCollider); 
     //DEBUG//console.log(controls.getObject().position)
     colliderVisuals.children.forEach(mesh => {
@@ -956,22 +1018,24 @@ function animate() {
                 }
                 break;
             case 'collider_ChairColliderPlayer':
-                // Chair Gama
-                interactionE.style.zIndex = 99;
-                if(KeyPressed == "KeyE"){
-                    interactionE.style.zIndex = -99;
-                    if(!onChairGama){
-                        controls.unlock();
-                        onChairGama = true;
-                        velocity.x = 0;
-                        velocity.z = 0;
-                        controls.getObject().position.set(119.5, 50, 298);
-                        controls.getObject().rotation.x = 0;
-                        controls.getObject().rotation.y = Math.PI /5;
-                        controls.getObject().rotation.z = 0;
-                        canMove = false;
-                        cutsceneActive = true;
-                        startSleepGame();
+                if(!playedSleepGame){
+                    // Chair Gama
+                    interactionE.style.zIndex = 99;
+                    if(KeyPressed == "KeyE"){
+                        interactionE.style.zIndex = -99;
+                        if(!onChairGama){
+                            controls.unlock();
+                            onChairGama = true;
+                            velocity.x = 0;
+                            velocity.z = 0;
+                            controls.getObject().position.set(119.5, 50, 298);
+                            controls.getObject().rotation.x = 0;
+                            controls.getObject().rotation.y = Math.PI /5;
+                            controls.getObject().rotation.z = 0;
+                            canMove = false;
+                            cutsceneActive = true;
+                            startSleepGame();
+                        }
                     }
                 }
                 break;
@@ -1130,16 +1194,17 @@ function animate() {
             if(!sleepGameActive && inGamaDoor) changeColliderColor("ChairColliderPlayer", 0.2); else changeColliderColor("ChairColliderPlayer", 0)
             //Get to first class
             if (BarrierPart1) {
-                BarrierPart1 = null;
                 const deltaY = -100;
                 BarrierPart1.min.y += deltaY;
                 BarrierPart1.max.y += deltaY;
+                BarrierPart1 = null;
             }
             const mesh = colliderVisuals.getObjectByName('collider_BarrierPart1');
             if (mesh) {
                 mesh.position.y -= 100;
             }
             if(sleepGameActive){
+                if(!addedTeacherGama) addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 277, 10,15,10), addedTeacherGama = true, //DEBUG//console.log("AddedTeacherGama");
                 sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
             }
         }
