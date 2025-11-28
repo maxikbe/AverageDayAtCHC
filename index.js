@@ -11,15 +11,15 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = true;
-let CHCpart2 = false;
+let CHCpart1 = false;
+let CHCpart2 = true;
 let CHCpart3 = false;
 let CHCpartEND = false;
 
@@ -38,10 +38,14 @@ let GamaDoor = null;
 let LockerInteract = null;
 let BarrierPart1 = null;
 let ChairColliderPlayer = null;
+let DeltaDoor = null;
 
 //Doors
 let inMainCHCDoor = false;
 let inGamaDoor = false;
+let inDeltaDoor = false;
+
+//Chairs
 let onChairGama = false;
 
 //People
@@ -238,9 +242,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: false, // false   // DEBUG true
+        wireframe: true, // false   // DEBUG true
         transparent: true,
-        opacity: 0, // 0    // DEBUG 0.5
+        opacity: 0.5, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -257,6 +261,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "LockerInteract") LockerInteract = box;
     if (name === "BarrierPart1") BarrierPart1 = box;
     if (name === "ChairColliderPlayer") ChairColliderPlayer = box;
+    if (name === "DeltaDoor") DeltaDoor = box;
 }
 
 // NEW: Function specifically for stairs
@@ -429,6 +434,7 @@ function createCHC(){
     addCollider("gamaWall2", 81.5, 40, 280, 1, 60, 100);
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
+    addCollider("DeltaDoor", 125, 50, 166, 2, 20, 10.5)
 
     //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
@@ -890,7 +896,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1035,6 +1041,26 @@ function animate() {
                             canMove = false;
                             cutsceneActive = true;
                             startSleepGame();
+                        }
+                    }
+                }
+                break;
+            case 'collider_DeltaDoor':
+                // Door Delta
+                interactionE.style.zIndex = 99;
+                if(KeyPressed == "KeyE"){
+                    interactionE.style.zIndex = -99;
+                    if(!inDeltaDoor && CHCpart3){
+                        inDeltaDoor = true;
+                        controls.getObject().position.set(117.35, 55, 166)
+                    } else if(inDeltaDoor && !CHCpart3){
+                        inDeltaDoor = false;
+                        controls.getObject().position.set(128.5, 55, 166)
+                    } else{
+                        if(CHCpart3){
+                            alert_text("I can´t leave, class is starting soon...")
+                        }else{
+                            alert_text("Someone has class in there!!!")
                         }
                     }
                 }
@@ -1210,6 +1236,7 @@ function animate() {
         }
         if(CHCpart3){
             if(inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
+            if(!inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
         }
     }
 
