@@ -8,8 +8,8 @@
     </head>
     <body>
         <div id="Transition"></div>
-        <div id="interaction" style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 style="font-size: medium;color: white;font-family:'Courier New', Courier, monospace;">Press "E" to...</h2></div>
-        <div style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 id="alert" style="margin-bottom: -100px;font-size: larger;color: white;font-family:'Courier New', Courier, monospace;"></h2></div>
+        <div id="interaction" style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 style="font-size: medium;color: white;">Press "E" to...</h2></div>
+        <div style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 id="alert" style="margin-bottom: -100px;font-size: larger;color: white;"></h2></div>
         
         <!--Locker-->
         <div class="locker" style="display: none;">
@@ -26,6 +26,16 @@
             <div id="sleepGameTimerContainer">
                 <div id="sleepGameTimeBar"></div>
             </div>
+        </div>
+
+        <!--Presentation Game UI-->
+        <div id="presentation-game-ui" class="presentation-game-ui">
+            <input class="my-input presentation-score" type="text" id="word-input" placeholder="Type the word here..." maxlength="30" disabled>
+            <div id="presentation-score" class="presentation-score">
+                <h2 id="presentation-score-ui">Score: Y/X</h2>
+                <p id="presentation-feedback">Keep presenting...</p>
+            </div>
+            <div id="presentation-words" class="presentation-words"></div>
         </div>
 
         <!--To do list UI-->

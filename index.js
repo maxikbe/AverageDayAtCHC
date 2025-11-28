@@ -19,9 +19,13 @@ let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = false;
-let CHCpart2 = true;
-let CHCpart3 = false;
+let CHCpart2 = false;
+let CHCpart3 = true;
+let CHCpart4 = false;
 let CHCpartEND = false;
+
+// newQuest
+let newQuest = false
 
 // LOCATION CREATING
 let createdCHC = false;
@@ -386,33 +390,8 @@ function createCHC(){
     addCollider("FloorLockers", 105, -13, 105, 85, 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
-    addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
-    addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
-    addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
-    addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,15,14);
-    addCollider("TableWithChairCollider3",89.8, 50, 308, 17.5,15,14);
-    addCollider("TableWithChairCollider4",115.8, 50, 321, 17.5,15,14);
-    addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,15,14);
-    addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
-    addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
-    addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
-        //people STILL
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
-        //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
-    //stairColliders
+        //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
     addStairs("smallEntranceStairs3", 82, 2, 20, 35, 5, 4, 4, "z+");
@@ -435,8 +414,34 @@ function createCHC(){
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
     addCollider("DeltaDoor", 125, 50, 166, 2, 20, 10.5)
-
-    //stairColliders
+        //furniture
+    addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
+    addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
+    addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
+    addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,15,14);
+    addCollider("TableWithChairCollider3",89.8, 50, 308, 17.5,15,14);
+    addCollider("TableWithChairCollider4",115.8, 50, 321, 17.5,15,14);
+    addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,15,14);
+    addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
+    addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
+        //people STILL
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 310, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
+    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
+        //interactables
+    addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
+    addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
+        //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
     addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
 
@@ -593,6 +598,90 @@ const interactionE = document.getElementById("interaction");
 //Transition global
 const transBG = document.getElementById("Transition");
 
+// PRESENTING GAME
+// presenting game variables
+let presentingGameActive = false;
+let currentPresWord;
+let currentPresInput;
+let currentPresScore = 0;
+let presGoal = 10;
+let playedPresentaionGame = false;
+const presUI = document.getElementById("presentation-game-ui")
+const presScore = document.getElementById("presentation-score-ui")
+const presFeedback = document.getElementById("presentation-feedback")
+const presWords = document.getElementById("presentation-words")
+const wordInput = document.getElementById("word-input")
+const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee']
+
+function generateNewWord(){
+    wordInput.value = ""
+    presScore.textContent = 'Score: '+ currentPresScore +' / ' +presGoal 
+    if(currentPresScore >= presGoal) return endPresentingGame(true);
+    let randomIndex = Math.floor(Math.random() * words.length)
+    //console.log(words[randomIndex])
+    currentPresWord = words[randomIndex]
+    let presWord = document.createElement("div")
+    presWord.textContent = currentPresWord
+    presWord.style.left = Math.floor(Math.random() * 80) + "%"
+    presWord.style.top = Math.floor(Math.random() * 80) + "%"
+    presWord.classList.add("presWord")
+    presWords.appendChild(presWord)
+}
+
+function startPresentingGame(){
+    playedPresentaionGame = true;
+    alert_text("You are presenting!")
+    controls.getObject().position.set(100, 56, 155);
+    controls.getObject().rotation.x = 0;
+    controls.getObject().rotation.y = Math.PI;
+    controls.getObject().rotation.z = 0;
+    velocity.x = 0;
+    velocity.z = 0;
+    canMove = false;
+    cutsceneActive = true;
+    controls.unlock();
+    setTimeout(() => {
+        if(!presentingGameActive){
+            presentingGameActive = true
+            presUI.style.display = "flex";
+            wordInput.disabled = false;
+            wordInput.focus();
+            generateNewWord()
+        }
+    }, 2500)
+}
+
+function endPresentingGame(sucess){
+    presUI.style.display = "none";
+    canMove = true;
+    cutsceneActive = false;
+    controls.lock();
+    controls.getObject().position.set(100, 56, 165);
+    if(sucess){
+        alert_text("You did great!")
+        CHCpart3 = false
+        newQuest = false
+        CHCpart4 = true
+    }else{
+        alert_text("Upps, try again...")
+        playedPresentaionGame = false
+    }
+}
+
+function handleInput(event){
+    //console.log(event.data)
+    //console.log(wordInput.value)
+    currentPresInput = wordInput.value;
+    if(currentPresInput.toLowerCase() === currentPresWord.toLowerCase()){
+        //console.log("RightWord")
+        currentPresScore += 1
+        presWords.removeChild(presWords.firstChild);
+        generateNewWord()
+    }
+}
+
+wordInput.addEventListener('input', handleInput);
+
 // SLEEP GAME
 // sleep game variables
 let sleepGameActive = false;
@@ -683,6 +772,7 @@ function endSleepGame(success) {
     if (success) {
         alert_text("You stayed awake!");
         CHCpart2 = false;
+        newQuest = false
         CHCpart3 = true;
         
         // enable player movement
@@ -920,6 +1010,7 @@ function animate() {
             cutsceneActive = false;
             
             CHCpart1 = false;
+            newQuest = false
             CHCpart2 = true;
         }   
         
@@ -1062,6 +1153,16 @@ function animate() {
                         }else{
                             alert_text("Someone has class in there!!!")
                         }
+                    }
+                }
+                break;
+            case 'collider_presentinGameInteraciton':
+                if(!playedPresentaionGame){
+                    // Presentaion Delta
+                    interactionE.style.zIndex = 99;
+                    if(KeyPressed == "KeyE"){
+                        interactionE.style.zIndex = -99;
+                        startPresentingGame()
                     }
                 }
                 break;
@@ -1210,11 +1311,19 @@ function animate() {
     }
     if(locationCHC){
         if(CHCpart1){
+            if(!newQuest){
+                newQuest = true
+                alert_text("New quest!")
+            }
             if(!LockerOpened) changeColliderColor('LockerInteract', 0.2); else changeColliderColor("LockerInteract", 0);
             quests_text("Put your stuff into the locker")
             //Put your things into your locker
         }
         if(CHCpart2){
+            if(!newQuest){
+                newQuest = true
+                alert_text("New quest!")
+            }
             quests_text("Get to your first class - 1st floor, Gama")
             if(!inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0)
             if(!sleepGameActive && inGamaDoor) changeColliderColor("ChairColliderPlayer", 0.2); else changeColliderColor("ChairColliderPlayer", 0)
@@ -1235,16 +1344,24 @@ function animate() {
             }
         }
         if(CHCpart3){
+            if(!newQuest){
+                newQuest = true
+                alert_text("New quest!")
+            }
+            quests_text("Get to your second class - 1st floor, Delta")
             if(inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
             if(!inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
+            if(inDeltaDoor && !playedPresentaionGame) changeColliderColor("presentinGameInteraciton", 0.2); else changeColliderColor("presentinGameInteraciton", 0);
+        }
+        if(CHCpart4){
+            if(!newQuest){
+                newQuest = true
+                alert_text("New quest!")
+            }
+            if(inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
         }
     }
 
     renderer.render(scene, camera);
 }
 animate();
-
-//Random word game 
-//const parWords = ['jakoby', 'vlastně', 'prostě', 'jako', 'prostě', 'právě', 'uhm'];
-//var index = Math.floor(Math.random() *7);
-//console.log(parWords[index]);
