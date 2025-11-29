@@ -694,7 +694,7 @@ function endVendingGame(succes){
     listOfVenLights = []
     venCanSubmit = false
     if(succes){
-        venFeedback.textContent = "Right! Take your drink."
+        venFeedback.textContent = "Right!"
         setTimeout(() =>{
             //console.log("Win")
             canMove = true
@@ -702,7 +702,7 @@ function endVendingGame(succes){
             controls.lock()
             venUI.style.display = 'none'
             vendingGameStarted = false
-            alert_text("You got it! Take your drink.")
+            alert_text("Finally, I can take my drink.")
         },1500)
     }else{
         for(let i = 0; i < 20; i++){
@@ -712,7 +712,7 @@ function endVendingGame(succes){
                 venButton.classList.add('incorrect')
             }
         }
-        venFeedback.textContent = "Wrong! Try again."
+        venFeedback.textContent = "Wrong!"
         setTimeout(() =>{
             canMove = true
             cutsceneActive = false
@@ -726,7 +726,7 @@ function endVendingGame(succes){
             venRound = 0
             vendingGameStarted = false
             venFeedback.textContent = "Watch the pattern!"
-            alert_text("Wrong, try again!")
+            alert_text("My card declined again...")
         },1500)
     }
 }
@@ -866,7 +866,7 @@ function generateNewWord(){
 // start presenting game
 function startPresentingGame(){
     playedPresentaionGame = true;
-    alert_text("You are presenting!")
+    alert_text("I can´t use any parasitic words.")
     controls.getObject().position.set(100, 56, 155);
     controls.getObject().rotation.x = 0;
     controls.getObject().rotation.y = Math.PI;
@@ -899,12 +899,12 @@ function endPresentingGame(sucess){
     controls.lock();
     controls.getObject().position.set(100, 56, 165);
     if(sucess){
-        alert_text("You did great!")
+        alert_text("I did great!")
         CHCpart4 = false
         newQuest = false
         CHCpart5 = true
     }else{
-        alert_text("Upps, try again...")
+        alert_text("Upps, I need to try again...")
         playedPresentaionGame = false
     }
 }
@@ -1013,7 +1013,7 @@ function endSleepGame(success) {
     sleepGameUI.style.display = 'none';
 
     if (success) {
-        alert_text("You stayed awake!");
+        alert_text("I stayed awake!");
         CHCpart3 = false;
         newQuest = false
         CHCpart4 = true;
@@ -1029,7 +1029,7 @@ function endSleepGame(success) {
         playedSleepGame = false;
         gameFailed = true;
         setTimeout(() => {
-            alert_text("You fell asleep! Try again.");
+            alert_text("I fell asleep, again?");
         }, 1000);
         
         setTimeout(() => {
@@ -1361,7 +1361,7 @@ function animate() {
                         if(CHCpart3){
                             alert_text("I can´t leave, class is starting soon...")
                         }else{
-                            alert_text("Someone has class in there!!!")
+                            alert_text("Someone else has class in there!!!")
                         }
                     }
                 }
@@ -1574,7 +1574,7 @@ function animate() {
         if(CHCpart1){
             if(!newQuest){
                 newQuest = true
-                alert_text("New quest!")
+                alert_text("New mission!")
             }
             if(!LockerOpened) changeColliderColor('LockerInteract', 0.2); else changeColliderColor("LockerInteract", 0);
             quests_text("Put your stuff into the locker")
@@ -1584,7 +1584,7 @@ function animate() {
             changeColliderColor("VendingMachineGame", 0.2);
             if(!newQuest){
                 newQuest = true
-                alert_text("New quest!")
+                alert_text("New mission!")
             }
             quests_text("Buy coffee/cocoa")
         }
@@ -1592,7 +1592,7 @@ function animate() {
             changeColliderColor("VendingMachineGame", 0)
             if(!newQuest){
                 newQuest = true
-                alert_text("New quest!")
+                alert_text("New mission!")
             }
             quests_text("Get to your first class - 1st floor, Gama")
             if(!inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0)
@@ -1616,7 +1616,7 @@ function animate() {
         if(CHCpart4){
             if(!newQuest){
                 newQuest = true
-                alert_text("New quest!")
+                alert_text("New mission!")
             }
             quests_text("Get to your second class - 1st floor, Delta")
             if(inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
@@ -1626,7 +1626,7 @@ function animate() {
         if(CHCpart5){
             if(!newQuest){
                 newQuest = true
-                alert_text("New quest!")
+                alert_text("New mission!")
             }
             if(inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
         }
