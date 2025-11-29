@@ -19,9 +19,9 @@ let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = false;
-let CHCpart2 = false;
+let CHCpart2 = true;
 let CHCpart3 = false;
-let CHCpart4 = true;
+let CHCpart4 = false;
 let CHCpart5 = false;
 let CHCpartEND = false;
 
@@ -44,13 +44,15 @@ let LockerInteract = null;
 let BarrierPart1 = null;
 let ChairColliderPlayer = null;
 let DeltaDoor = null;
+let VendingMachineGame = null;
 
 //Doors
 let inMainCHCDoor = false;
 let inGamaDoor = false;
 let inDeltaDoor = false;
 
-//Chairs
+//interactables
+let vendingMachineOpen = false;
 let onChairGama = false;
 
 //People
@@ -267,6 +269,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "BarrierPart1") BarrierPart1 = box;
     if (name === "ChairColliderPlayer") ChairColliderPlayer = box;
     if (name === "DeltaDoor") DeltaDoor = box;
+    if (name === "VendingMachineGame") VendingMachineGame = box;
 }
 
 // NEW: Function specifically for stairs
@@ -391,7 +394,10 @@ function createCHC(){
     addCollider("FloorLockers", 105, -13, 105, 85, 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
+    addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
+        //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
+    addCollider("VendingMachineGame", 140 , 5, 75, 15, 15, 5);
         //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -419,7 +425,6 @@ function createCHC(){
     addImage("DeltaDoorTag", './imgs/DeltaSign.png', 126, 50, 166, 3, 3, 3)
     addImage("GamaDoorTag", './imgs/GamaSign.png', 126, 50, 279, 3, 3, 3)
         //furniture
-    addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
     addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
     addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
     addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,15,14);
@@ -601,6 +606,59 @@ let item1Snapped = false;
 const interactionE = document.getElementById("interaction");
 //Transition global
 const transBG = document.getElementById("Transition");
+
+// VENDING MACHINE GAME
+// vending game variables
+let vendingGameStarted = false
+let venRound = 0
+const venRoundGoal = 7;
+const venUI = document.getElementById('vending-ui')
+const venButtonGrid = document.getElementById('vending-container')
+const venScore = document.getElementById('vending-score')
+const venFeedback = document.getElementById('vending-message')
+const venSubmitButton = document.getElementById('vending-submit-button')
+
+function handleVendingButtonClick(event){
+    let venCurrentClickedButton = event.target
+    //console.log(event.target)
+    if(venCurrentClickedButton.classList.contains('lit')){
+        venCurrentClickedButton.classList.remove('lit')
+    }else{
+        venCurrentClickedButton.classList.add('lit')
+    }
+}
+
+function venRoundCreate(){
+    venRound +=1
+    venScore.textContent = 'Round: ' +venRound+"/" + venRoundGoal;
+    let venTargetIndex = 4;
+    let venButton = venButtonGrid.querySelector(`[data-index="${venTargetIndex}"]`);
+    //console.log(venButton)
+    venButton.classList.add('lit');
+}
+
+function createVendingButtons(){
+    for(let i = 0; i < 20; i++){
+        let vendingButton = document.createElement('button')
+        vendingButton.classList.add('vending-button')
+        vendingButton.dataset.index = i;
+        vendingButton.addEventListener('click', handleVendingButtonClick);
+        venButtonGrid.appendChild(vendingButton)
+    }
+    venRoundCreate()
+}
+
+function startVendingGame(){
+    if(!vendingGameStarted){
+        vendingGameStarted = true;
+        createVendingButtons()
+        canMove = false;
+        cutsceneActive = true;
+        controls.unlock();
+        velocity.x = 0
+        velocity.y = 0
+    }
+}
 
 // PRESENTING GAME
 // presenting game variables
@@ -1023,7 +1081,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200
+            controls.getObject().position.set(75, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1048,7 +1106,7 @@ function animate() {
             
             CHCpart1 = false;
             newQuest = false
-            CHCpart3 = true;
+            CHCpart2 = true;
         }   
         
         // DOORS AND INTERACTABLES CONTROLERS
@@ -1075,7 +1133,7 @@ function animate() {
             case "collider_LockerInteract":
                 // Player Locker
                 interactionE.style.zIndex = 99;  
-                if(KeyPressed == "KeyE" && !LockerOpened){
+                if(KeyPressed == "KeyE" && !LockerOpened && CHCpart1){
                     interactionE.style.zIndex = -99;
                     LockerOpened = true;
                     canMove = false;
@@ -1200,6 +1258,16 @@ function animate() {
                     if(KeyPressed == "KeyE"){
                         interactionE.style.zIndex = -99;
                         startPresentingGame()
+                    }
+                }
+                break;
+            case 'collider_VendingMachineGame':
+                interactionE.style.zIndex = 99;
+                if(KeyPressed == 'KeyE'){
+                    interactionE.style.zIndex = -99;
+                    if(!vendingMachineOpen){
+                        vendingMachineOpen = true;
+                        startVendingGame()
                     }
                 }
                 break;
@@ -1357,6 +1425,8 @@ function animate() {
             //Put your things into your locker
         }
         if(CHCpart2){
+            changeColliderColor("VendingMachineGame", 0.2);
+            startVendingGame()
             if(!newQuest){
                 newQuest = true
                 alert_text("New quest!")
@@ -1364,6 +1434,7 @@ function animate() {
             quests_text("Buy coffee/cocoa")
         }
         if(CHCpart3){
+            changeColliderColor("VendingMachineGame", 0)
             if(!newQuest){
                 newQuest = true
                 alert_text("New quest!")
@@ -1371,7 +1442,7 @@ function animate() {
             quests_text("Get to your first class - 1st floor, Gama")
             if(!inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0)
             if(!sleepGameActive && inGamaDoor) changeColliderColor("ChairColliderPlayer", 0.2); else changeColliderColor("ChairColliderPlayer", 0)
-            //Get to first class
+            //destroy barrier
             if (BarrierPart1) {
                 const deltaY = -100;
                 BarrierPart1.min.y += deltaY;

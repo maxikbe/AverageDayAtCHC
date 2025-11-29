@@ -203,3 +203,72 @@ canvas {
     width: 100%;
     height: 100%;
 }
+
+#vending-ui {
+    position: fixed;
+    max-width: 50%;
+    max-height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #333;
+    padding: 30px;
+    border: 5px solid #5cb85c;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    justify-content: center;
+    color: white;
+}
+
+#vending-score{
+    width: 25%;
+    align-self: start;
+    padding: 0px 5px;
+}
+
+#vending-container {
+    width: 50%;
+    display: grid;
+    aspect-ratio: 1 / 1;
+    grid-template-columns: repeat(5,1fr);
+    grid-template-rows: repeat(4,auto);
+}
+
+#vending-info-container{
+    font-size: small;
+    width: 25%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.vending-button {
+    aspect-ratio: 1 / 1;
+    width: 20%;
+    height: auto;
+    background-color: #444;
+    border: 2px solid #555;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    border-radius: 5px;
+    align-self: center;
+    justify-self: center;
+}
+
+.vending-button.lit {
+    background-color: #5cb85c; 
+}
+
+.vending-button.correct {
+    background-color: #007bff;
+}
+
+.vending-button.incorrect {
+    background-color: #dc3545;
+}
+
+.vending-button:disabled {
+    cursor: not-allowed;
+}
