@@ -619,8 +619,16 @@ const venSubmitButton = document.getElementById('vending-submit-button')
 let listOfVenLights = []
 let playedVendingGame = false
 let venCanSubmit = false
+let venCanClick = false
 
 function handleVendingButtonClick(event){
+    if(!venCanClick){
+        setTimeout(() => {
+            venFeedback.textContent = "Watch the pattern!"
+        }, 1000)
+        return venFeedback.textContent = "Can´t click right now!"
+    } 
+
     let venCurrentClickedButton = event.target
     //console.log(event.target)
     if(venCurrentClickedButton.classList.contains('lit')){
@@ -632,7 +640,13 @@ function handleVendingButtonClick(event){
 
 // onclick submit button
 function venSubmit(){
-    if(!venCanSubmit) venFeedback.textContent = "Can´t submit right now!"
+    if(!venCanSubmit){
+        setTimeout(() => {
+            venFeedback.textContent = "Watch the pattern!"
+        }, 1000)
+        return venFeedback.textContent = "Can´t submit right now!"
+    } 
+    venCanClick = false;
     venCanSubmit = false;
     if (checkVendingPatternMatch()) { 
         venFeedback.textContent = "Great!"
@@ -654,13 +668,20 @@ if (venSubmitButton) {
 function checkVendingPatternMatch(){
     for(let i = 0; i <20; i++){
         if(venButtonGrid.querySelector(`[data-index="${i}"]`).classList.contains('lit')){
-            if(!listOfVenLights.includes(venButtonGrid.querySelector(`[data-index="${i}"]`))){
+            if(!listOfVenLights.includes(i)){
                 return false
             }
         }else{
-            if(listOfVenLights.includes(venButtonGrid.querySelector(`[data-index="${i}"]`))){
+            if(listOfVenLights.includes(i)){
                 return false
             }
+        }
+    }
+    for(let i = 0; i < 20; i++){
+        let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+        if(venButton.classList.contains('lit')) {
+            venButton.classList.remove('lit')
+            venButton.classList.add('correct')
         }
     }
     //console.log(listOfVenLights)
@@ -670,23 +691,34 @@ function checkVendingPatternMatch(){
 
 // ends vending game
 function endVendingGame(succes){
-    canMove = true
-    cutsceneActive = false
-    controls.lock()
     listOfVenLights = []
     venCanSubmit = false
     if(succes){
         venFeedback.textContent = "Right! Take your drink."
         setTimeout(() =>{
-            console.log("Win")
+            //console.log("Win")
+            canMove = true
+            cutsceneActive = false
+            controls.lock()
             venUI.style.display = 'none'
             vendingGameStarted = false
+            alert_text("You got it! Take your drink.")
         },1500)
     }else{
+        for(let i = 0; i < 20; i++){
+            let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+            if(venButton.classList.contains('lit')) {
+                venButton.classList.remove('lit')
+                venButton.classList.add('incorrect')
+            }
+        }
         venFeedback.textContent = "Wrong! Try again."
         setTimeout(() =>{
+            canMove = true
+            cutsceneActive = false
+            controls.lock()
             playedVendingGame = false
-            console.log("Loss")
+            //console.log("Loss")
             venUI.style.display = 'none'
             while (venButtonGrid.firstChild) {
                 venButtonGrid.removeChild(venButtonGrid.firstChild);
@@ -694,6 +726,7 @@ function endVendingGame(succes){
             venRound = 0
             vendingGameStarted = false
             venFeedback.textContent = "Watch the pattern!"
+            alert_text("Wrong, try again!")
         },1500)
     }
 }
@@ -707,6 +740,7 @@ function venRoundCreate(){
         let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
         //console.log(venButton)
         venButton.classList.remove('lit')
+        venButton.classList.remove('correct')
     }
     //updates round
     venRound +=1
@@ -748,6 +782,7 @@ function venRoundCreate(){
                         venButton.classList.remove('lit')
                     }
                 }
+                venCanClick = true;
                 venCanSubmit = true;
             }, 350)
         }, 350)
