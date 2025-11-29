@@ -178,7 +178,7 @@ function detectLookedCollider() {
 
 //Create people
 const people = [];
-function addPerson(name, texturePath, x, y, z, width = 10, height = 20) {
+function addImage(name, texturePath, x, y, z, width = 10, height = 20) {
     const map = new THREE.TextureLoader().load(texturePath);
     
     const material = new THREE.MeshBasicMaterial({ 
@@ -414,6 +414,9 @@ function createCHC(){
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
     addCollider("DeltaDoor", 125, 50, 166, 2, 20, 10.5)
+        //door tags
+    addImage("DeltaDoorTag", './imgs/DeltaSign.png', 126, 50, 166, 3, 3, 3)
+    addImage("GamaDoorTag", './imgs/GamaSign.png', 126, 50, 279, 3, 3, 3)
         //furniture
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
     addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
@@ -425,19 +428,19 @@ function createCHC(){
     addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
     addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
         //people STILL
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 85.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 310, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
-    addPerson("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 310, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 323, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 336, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 336, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 310, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 310, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 323, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
         //interactables
     addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
@@ -605,7 +608,9 @@ let currentPresWord;
 let currentPresInput;
 let currentPresScore = 0;
 let presGoal = 10;
+const timerForWord = 5000; //ms
 let playedPresentaionGame = false;
+let wordTypeTimeout = null;
 const presUI = document.getElementById("presentation-game-ui")
 const presScore = document.getElementById("presentation-score-ui")
 const presFeedback = document.getElementById("presentation-feedback")
@@ -616,6 +621,7 @@ const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee', 'tak', 'takz
 
 // generate new word
 function generateNewWord(){
+    if (wordTypeTimeout) clearTimeout(wordTypeTimeout);
     wordInput.value = ""
     presScore.textContent = 'Score: '+ currentPresScore +' / ' +presGoal 
     if(currentPresScore >= presGoal) return endPresentingGame(true);
@@ -627,7 +633,17 @@ function generateNewWord(){
     presWord.style.left = Math.floor(Math.random() * 80) + "%"
     presWord.style.top = Math.floor(Math.random() * 80) + "%"
     presWord.classList.add("presWord")
+    let presWordTimer = document.createElement('div');
+    presWordTimer.classList.add('presWordTimer')
+    presWordTimer.id = 'presWordTimer'
+    presWordTimer.style.width = '100%'
+    presWord.appendChild(presWordTimer)
     presWords.appendChild(presWord)
+    wordTypeTimeout = setTimeout(() =>{
+        if(presentingGameActive){
+            endPresentingGame(false)
+        }
+    }, timerForWord)
 }
 
 // start presenting game
@@ -656,6 +672,8 @@ function startPresentingGame(){
 
 // end presenting game
 function endPresentingGame(sucess){
+    presWords.removeChild(presWords.firstChild);
+    presentingGameActive = false
     presUI.style.display = "none";
     canMove = true;
     cutsceneActive = false;
@@ -809,9 +827,22 @@ function animate() {
     //sleepGame bar
     if(sleepGameActive){
         if(timeLimit){
-            let widthBarNumber = parseFloat(timeBar.style.width);
-            widthBarNumber -= 100/ (60*timeLimit/1000)
-            timeBar.style.width = widthBarNumber + "%";
+            let presWordTimer = presWords.firstChild.lastChild;
+            if(presWordTimer && presWordTimer.style.width){
+                let widthBarNumber = parseFloat(presWordTimer.style.width);
+                widthBarNumber -= 100/ (60*timeLimit/1000)
+                timeBar.style.width = widthBarNumber + "%";
+            }
+        }
+    }
+
+    //presentingGame bar
+    if(presentingGameActive){
+        if(timerForWord){
+            let presWordTimer = document.getElementById('presWordTimer')
+            let widthBarNumber = parseFloat(presWordTimer.style.width);
+            widthBarNumber -= 100/ (60*timerForWord/1000)
+            presWordTimer.style.width = widthBarNumber + "%";
         }
     }
     
@@ -1343,7 +1374,7 @@ function animate() {
                 mesh.position.y -= 100;
             }
             if(sleepGameActive){
-                if(!addedTeacherGama) addPerson("gamePerson1", "./imgs/Person.png", 93.8, 40, 277, 10,15,10), addedTeacherGama = true, //DEBUG//console.log("AddedTeacherGama");
+                if(!addedTeacherGama) addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 277, 10,15,10), addedTeacherGama = true, //DEBUG//console.log("AddedTeacherGama");
                 sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
             }
         }
