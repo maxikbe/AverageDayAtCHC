@@ -20,8 +20,9 @@ let barriersOn = true; //true //DEBUG false
 //Story Parts
 let CHCpart1 = false;
 let CHCpart2 = false;
-let CHCpart3 = true;
-let CHCpart4 = false;
+let CHCpart3 = false;
+let CHCpart4 = true;
+let CHCpart5 = false;
 let CHCpartEND = false;
 
 // newQuest
@@ -246,9 +247,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true, // false   // DEBUG true
+        wireframe: false, // false   // DEBUG true
         transparent: true,
-        opacity: 0.5, // 0    // DEBUG 0.5
+        opacity: 0, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -616,6 +617,7 @@ const presScore = document.getElementById("presentation-score-ui")
 const presFeedback = document.getElementById("presentation-feedback")
 const presWords = document.getElementById("presentation-words")
 const wordInput = document.getElementById("word-input")
+let presWordTimer = null;
 //presention words
 const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee', 'tak', 'takze', 'realne']
 
@@ -633,7 +635,7 @@ function generateNewWord(){
     presWord.style.left = Math.floor(Math.random() * 80) + "%"
     presWord.style.top = Math.floor(Math.random() * 80) + "%"
     presWord.classList.add("presWord")
-    let presWordTimer = document.createElement('div');
+    presWordTimer = document.createElement('div');
     presWordTimer.classList.add('presWordTimer')
     presWordTimer.id = 'presWordTimer'
     presWordTimer.style.width = '100%'
@@ -672,7 +674,9 @@ function startPresentingGame(){
 
 // end presenting game
 function endPresentingGame(sucess){
-    presWords.removeChild(presWords.firstChild);
+    if (presWords.firstChild) {
+        presWords.removeChild(presWords.firstChild);
+    }
     presentingGameActive = false
     presUI.style.display = "none";
     canMove = true;
@@ -681,9 +685,9 @@ function endPresentingGame(sucess){
     controls.getObject().position.set(100, 56, 165);
     if(sucess){
         alert_text("You did great!")
-        CHCpart3 = false
+        CHCpart4 = false
         newQuest = false
-        CHCpart4 = true
+        CHCpart5 = true
     }else{
         alert_text("Upps, try again...")
         playedPresentaionGame = false
@@ -697,7 +701,9 @@ function handleInput(event){
     if(currentPresInput.toLowerCase() === currentPresWord.toLowerCase()){
         //console.log("RightWord")
         currentPresScore += 1
-        presWords.removeChild(presWords.firstChild);
+        if (presWords.firstChild) {
+            presWords.removeChild(presWords.firstChild);
+        }
         generateNewWord()
     }
 }
@@ -793,9 +799,9 @@ function endSleepGame(success) {
 
     if (success) {
         alert_text("You stayed awake!");
-        CHCpart2 = false;
+        CHCpart3 = false;
         newQuest = false
-        CHCpart3 = true;
+        CHCpart4 = true;
         
         // enable player movement
         controls.getObject().position.set(104, 56, 300); //OutOfChair
@@ -827,19 +833,15 @@ function animate() {
     //sleepGame bar
     if(sleepGameActive){
         if(timeLimit){
-            let presWordTimer = presWords.firstChild.lastChild;
-            if(presWordTimer && presWordTimer.style.width){
-                let widthBarNumber = parseFloat(presWordTimer.style.width);
-                widthBarNumber -= 100/ (60*timeLimit/1000)
-                timeBar.style.width = widthBarNumber + "%";
-            }
+            let widthBarNumber = parseFloat(timeBar.style.width);
+            widthBarNumber -= 100/ (60*timeLimit/1000)
+            timeBar.style.width = widthBarNumber + "%";
         }
     }
 
     //presentingGame bar
     if(presentingGameActive){
         if(timerForWord){
-            let presWordTimer = document.getElementById('presWordTimer')
             let widthBarNumber = parseFloat(presWordTimer.style.width);
             widthBarNumber -= 100/ (60*timerForWord/1000)
             presWordTimer.style.width = widthBarNumber + "%";
@@ -1039,14 +1041,14 @@ function animate() {
             }
         }
 
-        if(item1Snapped){
+        if(item1Snapped && CHCpart1){
             lockerUI.style.display = 'none';
             canMove = true;
             cutsceneActive = false;
             
             CHCpart1 = false;
             newQuest = false
-            CHCpart2 = true;
+            CHCpart3 = true;
         }   
         
         // DOORS AND INTERACTABLES CONTROLERS
@@ -1134,14 +1136,14 @@ function animate() {
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
                     interactionE.style.zIndex = -99;
-                    if(!inGamaDoor && CHCpart2){
+                    if(!inGamaDoor && CHCpart3){
                         inGamaDoor = true;
                         controls.getObject().position.set(117.35, 55, 280.5)
-                    } else if(inGamaDoor && !CHCpart2){
+                    } else if(inGamaDoor && !CHCpart3){
                         inGamaDoor = false;
                         controls.getObject().position.set(128.5, 55, 280.5)
                     } else{
-                        if(CHCpart2){
+                        if(CHCpart3){
                             alert_text("I can´t leave, class is starting soon...")
                         }else{
                             alert_text("Someone has class in there!!!")
@@ -1176,14 +1178,14 @@ function animate() {
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == "KeyE"){
                     interactionE.style.zIndex = -99;
-                    if(!inDeltaDoor && CHCpart3){
+                    if(!inDeltaDoor && CHCpart4){
                         inDeltaDoor = true;
                         controls.getObject().position.set(117.35, 55, 166)
-                    } else if(inDeltaDoor && !CHCpart3){
+                    } else if(inDeltaDoor && !CHCpart4){
                         inDeltaDoor = false;
                         controls.getObject().position.set(128.5, 55, 166)
                     } else{
-                        if(CHCpart3){
+                        if(CHCpart4){
                             alert_text("I can´t leave, class is starting soon...")
                         }else{
                             alert_text("Someone has class in there!!!")
@@ -1359,6 +1361,13 @@ function animate() {
                 newQuest = true
                 alert_text("New quest!")
             }
+            quests_text("Buy coffee/cocoa")
+        }
+        if(CHCpart3){
+            if(!newQuest){
+                newQuest = true
+                alert_text("New quest!")
+            }
             quests_text("Get to your first class - 1st floor, Gama")
             if(!inGamaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0)
             if(!sleepGameActive && inGamaDoor) changeColliderColor("ChairColliderPlayer", 0.2); else changeColliderColor("ChairColliderPlayer", 0)
@@ -1378,7 +1387,7 @@ function animate() {
                 sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
             }
         }
-        if(CHCpart3){
+        if(CHCpart4){
             if(!newQuest){
                 newQuest = true
                 alert_text("New quest!")
@@ -1388,12 +1397,15 @@ function animate() {
             if(!inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
             if(inDeltaDoor && !playedPresentaionGame) changeColliderColor("presentinGameInteraciton", 0.2); else changeColliderColor("presentinGameInteraciton", 0);
         }
-        if(CHCpart4){
+        if(CHCpart5){
             if(!newQuest){
                 newQuest = true
                 alert_text("New quest!")
             }
             if(inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
+        }
+        if(CHCpartEND){
+
         }
     }
 
