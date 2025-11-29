@@ -52,7 +52,6 @@ let inGamaDoor = false;
 let inDeltaDoor = false;
 
 //interactables
-let vendingMachineOpen = false;
 let onChairGama = false;
 
 //People
@@ -617,6 +616,9 @@ const venButtonGrid = document.getElementById('vending-container')
 const venScore = document.getElementById('vending-score')
 const venFeedback = document.getElementById('vending-message')
 const venSubmitButton = document.getElementById('vending-submit-button')
+let listOfVenLights = []
+let playedVendingGame = false
+let venCanSubmit = false
 
 function handleVendingButtonClick(event){
     let venCurrentClickedButton = event.target
@@ -628,15 +630,132 @@ function handleVendingButtonClick(event){
     }
 }
 
-function venRoundCreate(){
-    venRound +=1
-    venScore.textContent = 'Round: ' +venRound+"/" + venRoundGoal;
-    let venTargetIndex = 4;
-    let venButton = venButtonGrid.querySelector(`[data-index="${venTargetIndex}"]`);
-    //console.log(venButton)
-    venButton.classList.add('lit');
+// onclick submit button
+function venSubmit(){
+    if(!venCanSubmit) venFeedback.textContent = "Can´t submit right now!"
+    venCanSubmit = false;
+    if (checkVendingPatternMatch()) { 
+        venFeedback.textContent = "Great!"
+        setTimeout(() => {
+            venFeedback.textContent = "Watch the pattern!"
+            venRoundCreate();
+        }, 1000)
+    } else {
+        endVendingGame(false);
+    }
 }
 
+// onclick  submit button link
+if (venSubmitButton) {
+    venSubmitButton.addEventListener('click', venSubmit);
+}
+
+//Checks and returns if the patter  is right
+function checkVendingPatternMatch(){
+    for(let i = 0; i <20; i++){
+        if(venButtonGrid.querySelector(`[data-index="${i}"]`).classList.contains('lit')){
+            if(!listOfVenLights.includes(venButtonGrid.querySelector(`[data-index="${i}"]`))){
+                return false
+            }
+        }else{
+            if(listOfVenLights.includes(venButtonGrid.querySelector(`[data-index="${i}"]`))){
+                return false
+            }
+        }
+    }
+    //console.log(listOfVenLights)
+    listOfVenLights = []
+    return true
+}
+
+// ends vending game
+function endVendingGame(succes){
+    canMove = true
+    cutsceneActive = false
+    controls.lock()
+    listOfVenLights = []
+    venCanSubmit = false
+    if(succes){
+        venFeedback.textContent = "Right! Take your drink."
+        setTimeout(() =>{
+            console.log("Win")
+            venUI.style.display = 'none'
+            vendingGameStarted = false
+        },1500)
+    }else{
+        venFeedback.textContent = "Wrong! Try again."
+        setTimeout(() =>{
+            playedVendingGame = false
+            console.log("Loss")
+            venUI.style.display = 'none'
+            while (venButtonGrid.firstChild) {
+                venButtonGrid.removeChild(venButtonGrid.firstChild);
+            }
+            venRound = 0
+            vendingGameStarted = false
+            venFeedback.textContent = "Watch the pattern!"
+        },1500)
+    }
+}
+
+//creaters new round and clears the last
+function venRoundCreate(){
+    if(venRound >= 7) return endVendingGame(true);
+
+    // clears land buttons
+    for(let i = 0; i < 20; i++){
+        let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+        //console.log(venButton)
+        venButton.classList.remove('lit')
+    }
+    //updates round
+    venRound +=1
+    venScore.textContent = 'Round: ' +venRound+"/" + venRoundGoal;
+    const countToGenerate = Math.round(venRound * 1.5);
+
+    //creates new button - check for repeating ones
+    for(let i = 0; i < countToGenerate; i++){
+        let venTargetIndex;
+
+        do {
+            venTargetIndex = Math.floor(Math.random() * 20);
+        } while (listOfVenLights.includes(venTargetIndex));
+
+        listOfVenLights.push(venTargetIndex);
+        
+        let venButton = venButtonGrid.querySelector(`[data-index="${venTargetIndex}"]`);
+        if (venButton) {
+            venButton.classList.add('lit');
+        }
+    }
+    //removes online buttons - flicker animation
+    setTimeout(() =>{
+        for(let i = 0; i < 20; i++){
+            let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+            venButton.classList.remove('lit')
+        }
+        setTimeout(() =>{
+            for(let i = 0; i < 20; i++){
+                if(listOfVenLights.includes(i)) {
+                    let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+                    venButton.classList.add('lit')
+                }
+            }
+            setTimeout(() =>{
+                for(let i = 0; i < 20; i++){
+                    if(listOfVenLights.includes(i)) {
+                        let venButton = venButtonGrid.querySelector(`[data-index="${i}"]`)
+                        venButton.classList.remove('lit')
+                    }
+                }
+                venCanSubmit = true;
+            }, 350)
+        }, 350)
+    }, 1500)
+    //console.log(venButton)
+}
+
+//creates  vending buttons on start of the game
 function createVendingButtons(){
     for(let i = 0; i < 20; i++){
         let vendingButton = document.createElement('button')
@@ -645,11 +764,14 @@ function createVendingButtons(){
         vendingButton.addEventListener('click', handleVendingButtonClick);
         venButtonGrid.appendChild(vendingButton)
     }
+    venUI.style.display = "flex";
     venRoundCreate()
 }
 
+// start vending game
 function startVendingGame(){
     if(!vendingGameStarted){
+        playedVendingGame = true
         vendingGameStarted = true;
         createVendingButtons()
         canMove = false;
@@ -1265,8 +1387,7 @@ function animate() {
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == 'KeyE'){
                     interactionE.style.zIndex = -99;
-                    if(!vendingMachineOpen){
-                        vendingMachineOpen = true;
+                    if(!playedVendingGame){
                         startVendingGame()
                     }
                 }
@@ -1426,7 +1547,6 @@ function animate() {
         }
         if(CHCpart2){
             changeColliderColor("VendingMachineGame", 0.2);
-            startVendingGame()
             if(!newQuest){
                 newQuest = true
                 alert_text("New quest!")
