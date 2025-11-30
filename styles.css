@@ -24,6 +24,8 @@ canvas {
     height: 100vh;
 }
 
+/*/Locker/*/
+
 .locker {
     width: 100vw;
     height: 100vh;
@@ -62,10 +64,14 @@ canvas {
     border: 2px dashed white;
 }
 
+/*/Text Alerts/*/
+
 #alert {
     transition: opacity 0.3s ease;
     opacity: 0;
 }
+
+/*/Sleep game/*/
 
 .sleep-game-container {
     display: none;
@@ -117,6 +123,8 @@ canvas {
     background-color: #62da3d;
     transition: width 0.1s linear;
 }
+
+/*/Presentation/*/
 
 .presentation-game-ui{
     position: fixed;
@@ -204,6 +212,8 @@ canvas {
     height: 100%;
 }
 
+/*/Vending/*/
+
 #vending-ui {
     position: fixed;
     max-width: 50%;
@@ -271,4 +281,77 @@ canvas {
 
 .vending-button:disabled {
     cursor: not-allowed;
+}
+
+/*/Tahoot/*/
+
+#tahoot-ui {
+    position: absolute;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+
+#tahoot-display {
+    background: #ffffff;
+    width: 600px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+#tahoot-logo {
+    font-size: 40px;
+    font-weight: bold;
+    color: #5a28ff;
+    margin-bottom: 25px;
+}
+
+#tahoot-input-display {
+    background: #f3f3f3;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+#tahoot-input-text {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+#tahoot-input {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tahoot-input-submit {
+    margin-top: 15px;
+    width: 120px;
+    height: 45px;
+    background: #5a28ff;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#tahoot-input-submit:hover {
+    background: #3c1cb7;
+}
+
+#tahoot-game-display {
+    margin-top: 20px;
 }

@@ -19,9 +19,9 @@ let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = false;
-let CHCpart2 = true;
+let CHCpart2 = false;
 let CHCpart3 = false;
-let CHCpart4 = false;
+let CHCpart4 = true;
 let CHCpart5 = false;
 let CHCpartEND = false;
 
@@ -138,7 +138,7 @@ function quests_text(text){
 
 // alert_text creator
 let alertCooldown = false;
-function alert_text(text) {
+function alert_text(text, timeLenght = 2000) {
     if (alertCooldown) return; /// cooldown
     alertCooldown = true;
 
@@ -151,11 +151,11 @@ function alert_text(text) {
 
     setTimeout(() => {
         el.style.opacity = "0";
-    }, 750);
+    }, timeLenght -250);
 
     setTimeout(() => {
         alertCooldown = false;
-    }, 1000);
+    }, timeLenght);
 }
 
 // Raycast - What is camera looking at
@@ -396,7 +396,7 @@ function createCHC(){
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
         //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
-    addCollider("VendingMachineGame", 140 , 5, 75, 15, 15, 5);
+    addCollider("VendingMachineGame", 120 , 5, 45, 15, 15, 5);
         //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -954,7 +954,7 @@ document.addEventListener('keydown', (e) => {
         sleepMessage.textContent = `Score: ${gameScore} / ${requiredScore}`;
         generateNewKey();
     } else {
-        alert_text(`Wrong key: ${pressedKey}`);
+        alert_text(`Wrong key: ${pressedKey}`, 1000);
         endSleepGame(false)
     }
 });
@@ -1238,7 +1238,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(75, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
