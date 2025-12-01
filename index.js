@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = true;
+let CHCpart1 = false;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = false;
+let CHCpart5 = true;
 let CHCpartEND = false;
 
 // newQuest
@@ -619,12 +619,12 @@ let tahootStarted = false;
 let playedTahoot = false
 const tahootQuestionsAndAnswers = 
 [
-{'Question' : 'Hey how are you?', 'A' : 'good', 'B' : 'Bad', 'Answer' : 'good'},
-{'Question' : 'What day is it?', 'A' : 'monday', 'B' : 'friday', 'Answer' : 'monday'},
-{'Question' : '1+1 = ?', 'A' : '1', 'B' : '2', 'Answer' : '2'},
-{'Question' : 'Capital city of France', 'A' : 'Paris', 'B' : 'Louvre', 'Answer' : 'Paris'},
+{'Question' : '5 % 3 = ?', 'A' : '2', 'B' : '5', 'C' : 'null', 'D' : '3', 'Answer' : '2'},
+{'Question' : 'What is smaller? Boolean or Byte? (in java)', 'A' : 'Boolean', 'B' : 'Byte', 'C' : 'Same size', 'D' : 'Neither', 'Answer' : 'Neither'},
+{'Question' : '2 + (24 + 52 - 357/6) * 0 + 4 = ?', 'A' : '154', 'B' : '0','C' : '6', 'D' : '-154', 'Answer' : '6'},
+{'Question' : 'Capital city of France?', 'A' : 'Louvre', 'B' : 'Paris', 'C' : 'Prague', 'D' : 'London', 'Answer' : 'Paris'},
 {'Question' : 'What is gold?', 'A' : 'Al', 'B' : 'Zn', 'C' : 'Au', 'D' : 'Pb', 'Answer' : 'Au'},
-{'Question' : 'Hey big is it?', 'A' : 'big', 'B' : 'small', 'Answer' : 'big'}
+{'Question' : 'Sun is the biggest star.', 'A' : 'True', 'B' : 'False', 'Answer' : 'False'}
 ]
 const tahootUI = document.getElementById('tahoot-ui')
 const tahootLogo = document.getElementById('tahoot-logo')
@@ -1410,7 +1410,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1601,9 +1601,9 @@ function animate() {
                 break;
             case 'collider_EpsilonChair':
                 if(!satDownEpsilon && !playedTahoot){
-                    satDownEpsilon = true
                     interactionE.style.zIndex = 99;
                     if(KeyPressed == 'KeyE'){
+                        satDownEpsilon = true
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.set(140, 55, 200)
                         startTahootGame()
