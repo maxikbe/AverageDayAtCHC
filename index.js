@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = true;
+let CHCpart1 = false;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = false;
+let CHCpart5 = true;
 let CHCpartEND = false;
 
 // newQuest
@@ -613,7 +613,15 @@ const transBG = document.getElementById("Transition");
 let satDownEpsilon = false;
 let tahootStarted = false;
 let playedTahoot = false
-const tahootQuestionsAndAnswers = {"Question1" : "B", "Question2" : "A"}
+const tahootQuestionsAndAnswers = 
+[
+{'Question' : 'Hey how are you?', 'A' : 'good', 'B' : 'Bad', 'Answer' : 'good'},
+{'Question' : 'What day is it?', 'A' : 'monday', 'B' : 'friday', 'Answer' : 'monday'},
+{'Question' : '1+1 = ?', 'A' : '1', 'B' : '2', 'Answer' : '2'},
+{'Question' : 'Capital city of France', 'A' : 'Paris', 'B' : 'Louvre', 'Answer' : 'Paris'},
+{'Question' : 'What is gold?', 'A' : 'Al', 'B' : 'Zn', 'C' : 'Au', 'D' : 'Pb', 'Answer' : 'Au'},
+{'Question' : 'Hey big is it?', 'A' : 'big', 'B' : 'small', 'Answer' : 'big'}
+]
 const tahootUI = document.getElementById('tahoot-ui')
 const tahootInputDisplay = document.getElementById('tahoot-input-display')
 const tahootOutputText = document.getElementById('tahoot-output-text')
@@ -622,8 +630,34 @@ const tahootInputSubmit = document.getElementById('tahoot-input-submit')
 const tahootGameDisplay = document.getElementById('tahoot-game-display')
 const tahootQuestion = document.getElementById('tahoot-question')
 const tahootAnswers = document.getElementById('tahoot-answers')
+const tahootScoreText = document.getElementById('tahoot-score')
+const tahootStreakText = document.getElementById('tahoot-streak')
 let tahootPin = 123456;
-let userTahootInput = null
+let tahootAnsweredQuestions = []
+let tahootRoundNumber = 0
+const tahootRoundNumberGoal = 6;
+let tahootQuestionIndex = 0
+let tahootPointScore = 0
+let tahootStreak = 0
+
+function tahootPointCalc(addPoint){
+    if(addPoint){
+        tahootPointScore += 1000 * (1 + tahootStreak/10)
+        tahootStreak += 1
+        tahootScoreText.textContent = "Score: "+tahootPointScore
+        tahootStreakText.textContent = "Streak: "+tahootStreak
+    }else{
+        tahootStreak = 0
+        tahootStreakText.textContent = "Streak: "+tahootStreak
+    }
+    if(tahootRoundNumber > tahootRoundNumberGoal) return endTahootGame()
+    createTahootQuestion()
+}
+
+function endTahootGame(){
+    tahootUI.style.display = 'none'
+    tahootStarted = false
+}
 
 function startTahootGame(){
     canMove = false
@@ -635,20 +669,65 @@ function startTahootGame(){
     playedTahoot = true;
 }
 
-function handleTahootButtonClick(){
-    console.log(userTahootInput)
-    if(userTahootInput == tahootPin){
-        console.log(123456)
+function createTahootQuestion(){
+    while (tahootAnswers.firstChild) {
+        tahootAnswers.removeChild(tahootAnswers.firstChild);
+    }
+    tahootQuestionIndex = Math.floor(Math.random() * tahootQuestionsAndAnswers.length);
+
+    while (tahootAnsweredQuestions.includes(tahootQuestionIndex)) {
+        tahootQuestionIndex = Math.floor(Math.random() * tahootQuestionsAndAnswers.length);
+    }
+
+    tahootQuestion.textContent = tahootQuestionsAndAnswers[tahootQuestionIndex].Question
+
+    tahootRoundNumber += 1
+    tahootAnsweredQuestions.push(tahootQuestionIndex)
+
+    console.log(tahootQuestionIndex)
+    if(Object.keys(tahootQuestionsAndAnswers[tahootQuestionIndex]).length > 4){
+        for(let i = 0; i<4;i++){
+            let question = document.createElement('button')
+            question.classList.add('tahoot-answer')
+            let tahootAnswerIndex = Object.keys(tahootQuestionsAndAnswers[tahootQuestionIndex])[i+1]
+            question.textContent = tahootQuestionsAndAnswers[tahootQuestionIndex][tahootAnswerIndex]
+            question.addEventListener('click', handleTahootQuestionClick);
+            tahootAnswers.appendChild(question)
+        }
     }else{
-        console.log("not")
+        for(let i = 0; i<2;i++){
+            let question = document.createElement('button')
+            question.classList.add('tahoot-answer')
+            let tahootAnswerIndex = Object.keys(tahootQuestionsAndAnswers[tahootQuestionIndex])[i+1]
+            question.textContent = tahootQuestionsAndAnswers[tahootQuestionIndex][tahootAnswerIndex]
+            question.addEventListener('click', handleTahootQuestionClick);
+            tahootAnswers.appendChild(question)
+        }
     }
 }
 
-function handleTahootInput(event){
-    tahootInput.style.place
+function startTahootQuiz(){
+    createTahootQuestion()
 }
 
-tahootInput.addEventListener('input', handleTahootInput);
+function handleTahootQuestionClick(event){
+    //console.log(event.target.textContent)
+    if(event.target.textContent == tahootQuestionsAndAnswers[tahootQuestionIndex].Answer){
+        tahootPointCalc(true)
+    }else{
+        tahootPointCalc(false)
+    }
+}
+
+function handleTahootButtonClick(){
+    if(tahootInput.value == tahootPin){
+        tahootInputDisplay.style.display = 'none'
+        tahootGameDisplay.style.display = 'flex'
+        startTahootQuiz()
+    }else{
+        tahootOutputText.textContent = "Wrong pin!"
+    }
+}
 
 tahootInputSubmit.addEventListener('click', handleTahootButtonClick);
 
@@ -872,7 +951,7 @@ let currentPresWord;
 let currentPresInput;
 let currentPresScore = 0;
 let presGoal = 10;
-const timerForWord = 5000; //ms
+const INITIAL_TIMER_FOR_WORD = 5000; //ms
 let playedPresentaionGame = false;
 let wordTypeTimeout = null;
 const presUI = document.getElementById("presentation-game-ui")
@@ -886,6 +965,7 @@ const words = ['jakoby', 'vlastne', 'jako', 'proste', 'uhm', 'eee', 'tak', 'takz
 
 // generate new word
 function generateNewWord(){
+    timerForWord = INITIAL_TIMER_FOR_WORD;
     if (wordTypeTimeout) clearTimeout(wordTypeTimeout);
     wordInput.value = ""
     presScore.textContent = 'Score: '+ currentPresScore +' / ' +presGoal 
@@ -908,7 +988,7 @@ function generateNewWord(){
         if(presentingGameActive){
             endPresentingGame(false)
         }
-    }, timerForWord)
+    }, INITIAL_TIMER_FOR_WORD)
 }
 
 // start presenting game
@@ -981,7 +1061,7 @@ const requiredScore = 15;
 const possibleKeys = ['A', 'S', 'D', 'W', 'E', 'F', 'J', 'K', 'L'];
 let currentKey = '';
 let keyPressTimeout = null;
-const timeLimit = 2500;
+const INITIAL_TIME_LIMIT = 2500;
 let gameFailed = false;
 const sleepGameUI = document.getElementById('sleep-game-ui');
 const sleepPrompt = document.getElementById('sleep-prompt');
@@ -1026,6 +1106,7 @@ function startSleepGame() {
 
 // function generate key
 function generateNewKey() {
+    timeLimit = INITIAL_TIME_LIMIT; 
     if (gameFailed || !sleepGameActive) return;
     timeBar.style.width = '100%'
     if (keyPressTimeout) clearTimeout(keyPressTimeout);
@@ -1048,7 +1129,7 @@ function generateNewKey() {
             endSleepGame(false);
             //DEBUG//console.log("U lost the game!!!") 
         }
-    }, timeLimit);
+    }, INITIAL_TIME_LIMIT);
 }
 
 // Function end sleep game
@@ -1091,25 +1172,48 @@ function endSleepGame(success) {
     }
 }
 
-// RENDER LOOP
-function animate() {
-    //sleepGame bar
-    if(sleepGameActive){
-        if(timeLimit){
-            let widthBarNumber = parseFloat(timeBar.style.width);
-            widthBarNumber -= 100/ (60*timeLimit/1000)
-            timeBar.style.width = widthBarNumber + "%";
+let timeLimit = INITIAL_TIME_LIMIT; 
+let timerForWord = INITIAL_TIMER_FOR_WORD;
+
+function updateGameTimers(deltaTime) {
+
+    if (sleepGameActive) {
+        if (timeLimit > 0) {
+            
+            timeLimit -= deltaTime;
+
+            if (timeLimit < 0) {
+                timeLimit = 0;
+            }
+
+            let newPercentage = (timeLimit / INITIAL_TIME_LIMIT) * 100;
+
+            timeBar.style.width = newPercentage + "%";
         }
     }
 
-    //presentingGame bar
-    if(presentingGameActive){
-        if(timerForWord){
-            let widthBarNumber = parseFloat(presWordTimer.style.width);
-            widthBarNumber -= 100/ (60*timerForWord/1000)
-            presWordTimer.style.width = widthBarNumber + "%";
+    if (presentingGameActive) {
+        if (timerForWord > 0) {
+            
+            timerForWord -= deltaTime;
+
+            if (timerForWord < 0) {
+                timerForWord = 0;
+            }
+
+            let newPercentage = (timerForWord / INITIAL_TIMER_FOR_WORD) * 100;
+
+            presWordTimer.style.width = newPercentage + "%";
         }
     }
+}
+
+// RENDER LOOP
+function animate() {
+    const delta = clock.getDelta(); // Time since last frame
+    const deltaTimeMs = delta * 1000;
+    
+    updateGameTimers(deltaTimeMs);
     
     //People allways rotate / look at player
     people.forEach(mesh => {
@@ -1138,8 +1242,6 @@ function animate() {
 
     detectLookedCollider();
     requestAnimationFrame(animate);
-
-    const delta = clock.getDelta(); // Time since last frame
 
     const moveSpeed = speed * (delta * 60);
     const gravityForce = gravity * (delta * 60);
@@ -1286,7 +1388,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;

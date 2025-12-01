@@ -312,7 +312,6 @@ canvas {
     font-size: 40px;
     font-weight: bold;
     color: #ffffff;
-    margin-bottom: 25px;
 }
 
 #tahoot-input-display {
@@ -320,7 +319,6 @@ canvas {
     background: #e3e3e3;
     padding: 20px;
     border-radius: 15px;
-    margin-bottom: 20px;
 }
 
 #tahoot-input-text {
@@ -364,5 +362,25 @@ canvas {
 }
 
 #tahoot-game-display {
-    margin-top: 20px;
+    flex-direction: column;
+    width: 80%;
+    height: 70%;
+    background: rgb(34, 2, 69);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+#tahoot-question{
+    color: white;
+}
+
+#tahoot-answers{
+    height: 50%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.tahoot-answer{
+    width: 48%;
+    height: 48%;
 }
