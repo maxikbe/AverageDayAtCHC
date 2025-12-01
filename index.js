@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = false;
+let CHCpart1 = true;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = true;
+let CHCpart5 = false;
 let CHCpartEND = false;
 
 // newQuest
@@ -45,12 +45,13 @@ let BarrierPart1 = null;
 let ChairColliderPlayer = null;
 let DeltaDoor = null;
 let VendingMachineGame = null;
+let EpsilonDoor = null;
 
 //Doors
 let inMainCHCDoor = false;
 let inGamaDoor = false;
 let inDeltaDoor = false;
-let inEpsilonDoor = true;
+let inEpsilonDoor = false;
 
 //interactables
 let onChairGama = false;
@@ -270,6 +271,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "ChairColliderPlayer") ChairColliderPlayer = box;
     if (name === "DeltaDoor") DeltaDoor = box;
     if (name === "VendingMachineGame") VendingMachineGame = box;
+    if (name === "EpsilonDoor") EpsilonDoor = box;
 }
 
 // NEW: Function specifically for stairs
@@ -421,9 +423,11 @@ function createCHC(){
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
     addCollider("DeltaDoor", 125, 50, 166, 2, 20, 10.5)
+    addCollider("EpsilonDoor", 125, 50, 47.5, 2, 20, 11)
         //door tags
     addImage("DeltaDoorTag", './imgs/DeltaSign.png', 126, 50, 166, 3, 3, 3)
     addImage("GamaDoorTag", './imgs/GamaSign.png', 126, 50, 279, 3, 3, 3)
+    addImage("EpsilonDoorTag", './imgs/GamaSign.png', 125, 50, 47.5, 3, 3, 3)
         //furniture
     addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
     addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
@@ -450,7 +454,7 @@ function createCHC(){
         //interactables
     addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
-    addCollider('EpsilonChair',145, 55, 200, 2,2,2)
+    addCollider('EpsilonChair',110, 50, 47.5, 2,2,2)
         //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
     addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
@@ -623,6 +627,7 @@ const tahootQuestionsAndAnswers =
 {'Question' : 'Hey big is it?', 'A' : 'big', 'B' : 'small', 'Answer' : 'big'}
 ]
 const tahootUI = document.getElementById('tahoot-ui')
+const tahootLogo = document.getElementById('tahoot-logo')
 const tahootInputDisplay = document.getElementById('tahoot-input-display')
 const tahootOutputText = document.getElementById('tahoot-output-text')
 const tahootInput = document.getElementById('tahoot-input')
@@ -639,24 +644,40 @@ const tahootRoundNumberGoal = 6;
 let tahootQuestionIndex = 0
 let tahootPointScore = 0
 let tahootStreak = 0
+let tahootScoreRAW = 0
 
 function tahootPointCalc(addPoint){
     if(addPoint){
         tahootPointScore += 1000 * (1 + tahootStreak/10)
         tahootStreak += 1
+        tahootScoreRAW +=1
         tahootScoreText.textContent = "Score: "+tahootPointScore
         tahootStreakText.textContent = "Streak: "+tahootStreak
     }else{
         tahootStreak = 0
         tahootStreakText.textContent = "Streak: "+tahootStreak
     }
-    if(tahootRoundNumber >= tahootRoundNumberGoal) return endTahootGame()
+    if(tahootRoundNumber >= tahootRoundNumberGoal) return showStatistics()
     createTahootQuestion()
+}
+
+function showStatistics(){
+    tahootGameDisplay.style.display = 'none'
+    tahootInputDisplay.style.display = 'flex'
+    tahootInput.style.display = 'none'
+    tahootLogo.textContent = 'Score: ' +tahootPointScore
+    tahootOutputText.textContent = 'Correct: '+tahootScoreRAW+ '/' +tahootRoundNumberGoal
+    tahootInputSubmit.textContent = 'Leave'
 }
 
 function endTahootGame(){
     tahootUI.style.display = 'none'
     tahootStarted = false
+    canMove = true
+    cutsceneActive = false
+    controls.lock()
+    CHCpart5 = false
+    CHCpartEND = true
 }
 
 function startTahootGame(){
@@ -720,6 +741,7 @@ function handleTahootQuestionClick(event){
 }
 
 function handleTahootButtonClick(){
+    if(tahootInputSubmit.textContent == 'Leave') return endTahootGame()
     if(tahootInput.value == tahootPin){
         tahootInputDisplay.style.display = 'none'
         tahootGameDisplay.style.display = 'flex'
@@ -1579,11 +1601,30 @@ function animate() {
                 break;
             case 'collider_EpsilonChair':
                 if(!satDownEpsilon && !playedTahoot){
+                    satDownEpsilon = true
                     interactionE.style.zIndex = 99;
                     if(KeyPressed == 'KeyE'){
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.set(140, 55, 200)
                         startTahootGame()
+                    }
+                }
+                break;
+            case 'collider_EpsilonDoor':
+                interactionE.style.zIndex = 99
+                if(KeyPressed == 'KeyE'){
+                    if(!inEpsilonDoor && CHCpart5){
+                        inEpsilonDoor = true
+                        controls.getObject().position.set(115, 50, 47.5);
+                    } else if (inEpsilonDoor && CHCpartEND) {
+                        inEpsilonDoor = false
+                        controls.getObject().position.set(135, 50, 47.5)
+                    } else {
+                        if(CHCpart5){
+                            alert_text("I can´t leave, class is starting soon...")
+                        }else{
+                            alert_text("Someone has class in there!!!")
+                        }
                     }
                 }
                 break;
@@ -1785,6 +1826,7 @@ function animate() {
         }
         if(CHCpart5){
             if(inDeltaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
+            if(!inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
             if(!newQuest){
                 newQuest = true
                 alert_text("New mission!")
@@ -1792,7 +1834,7 @@ function animate() {
             if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0.2); else changeColliderColor("EpsilonChair", 0);
         }
         if(CHCpartEND){
-
+            if(inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
         }
     }
 

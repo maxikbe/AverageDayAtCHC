@@ -315,6 +315,10 @@ canvas {
 }
 
 #tahoot-input-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 50%;
     background: #e3e3e3;
     padding: 20px;
@@ -345,7 +349,6 @@ canvas {
 }
 
 #tahoot-input-submit {
-    margin-top: 15px;
     width: 120px;
     height: 45px;
     background: #1c1c1c;
@@ -383,4 +386,23 @@ canvas {
 .tahoot-answer{
     width: 48%;
     height: 48%;
+    border-radius: 15px;
+    border: 2px rgb(66, 7, 103) solid;
+    text-align: center;
+    font-size: medium;
+}
+
+#tahoot-score{
+    color: white;
+}
+
+#tahoot-streak{
+    color: white;
+}
+
+.scoreHolder{
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
 }
