@@ -650,7 +650,7 @@ function tahootPointCalc(addPoint){
         tahootStreak = 0
         tahootStreakText.textContent = "Streak: "+tahootStreak
     }
-    if(tahootRoundNumber > tahootRoundNumberGoal) return endTahootGame()
+    if(tahootRoundNumber >= tahootRoundNumberGoal) return endTahootGame()
     createTahootQuestion()
 }
 
