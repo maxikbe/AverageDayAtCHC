@@ -11,17 +11,17 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = false;
+let CHCpart1 = true;
 let CHCpart2 = false;
 let CHCpart3 = false;
-let CHCpart4 = true;
+let CHCpart4 = false;
 let CHCpart5 = false;
 let CHCpartEND = false;
 
@@ -50,6 +50,7 @@ let VendingMachineGame = null;
 let inMainCHCDoor = false;
 let inGamaDoor = false;
 let inDeltaDoor = false;
+let inEpsilonDoor = true;
 
 //interactables
 let onChairGama = false;
@@ -449,6 +450,7 @@ function createCHC(){
         //interactables
     addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
+    addCollider('EpsilonChair',145, 55, 200, 2,2,2)
         //stairColliders
     addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
     addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
@@ -606,6 +608,50 @@ const interactionE = document.getElementById("interaction");
 //Transition global
 const transBG = document.getElementById("Transition");
 
+// TAHOOT GAME
+// tahoot game variables
+let satDownEpsilon = false;
+let tahootStarted = false;
+let playedTahoot = false
+const tahootQuestionsAndAnswers = {"Question1" : "B", "Question2" : "A"}
+const tahootUI = document.getElementById('tahoot-ui')
+const tahootInputDisplay = document.getElementById('tahoot-input-display')
+const tahootOutputText = document.getElementById('tahoot-output-text')
+const tahootInput = document.getElementById('tahoot-input')
+const tahootInputSubmit = document.getElementById('tahoot-input-submit')
+const tahootGameDisplay = document.getElementById('tahoot-game-display')
+const tahootQuestion = document.getElementById('tahoot-question')
+const tahootAnswers = document.getElementById('tahoot-answers')
+let tahootPin = 123456;
+let userTahootInput = null
+
+function startTahootGame(){
+    canMove = false
+    velocity.x = 0
+    velocity.y = 0
+    cutsceneActive = true;
+    controls.unlock()
+    tahootUI.style.display = 'flex';
+    playedTahoot = true;
+}
+
+function handleTahootButtonClick(){
+    console.log(userTahootInput)
+    if(userTahootInput == tahootPin){
+        console.log(123456)
+    }else{
+        console.log("not")
+    }
+}
+
+function handleTahootInput(event){
+    tahootInput.style.place
+}
+
+tahootInput.addEventListener('input', handleTahootInput);
+
+tahootInputSubmit.addEventListener('click', handleTahootButtonClick);
+
 // VENDING MACHINE GAME
 // vending game variables
 let vendingGameStarted = false
@@ -703,6 +749,8 @@ function endVendingGame(succes){
             venUI.style.display = 'none'
             vendingGameStarted = false
             alert_text("Finally, I can take my drink.")
+            CHCpart2 = false
+            CHCpart3 = true;
         },1500)
     }else{
         for(let i = 0; i < 20; i++){
@@ -1238,7 +1286,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1422,8 +1470,18 @@ function animate() {
                 interactionE.style.zIndex = 99;
                 if(KeyPressed == 'KeyE'){
                     interactionE.style.zIndex = -99;
-                    if(!playedVendingGame){
+                    if(!playedTahoot){
                         startVendingGame()
+                    }
+                }
+                break;
+            case 'collider_EpsilonChair':
+                if(!satDownEpsilon && !playedTahoot){
+                    interactionE.style.zIndex = 99;
+                    if(KeyPressed == 'KeyE'){
+                        interactionE.style.zIndex = -99;
+                        controls.getObject().position.set(140, 55, 200)
+                        startTahootGame()
                     }
                 }
                 break;
@@ -1624,11 +1682,12 @@ function animate() {
             if(inDeltaDoor && !playedPresentaionGame) changeColliderColor("presentinGameInteraciton", 0.2); else changeColliderColor("presentinGameInteraciton", 0);
         }
         if(CHCpart5){
+            if(inDeltaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
             if(!newQuest){
                 newQuest = true
                 alert_text("New mission!")
             }
-            if(inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
+            if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0.2); else changeColliderColor("EpsilonChair", 0);
         }
         if(CHCpartEND){
 
