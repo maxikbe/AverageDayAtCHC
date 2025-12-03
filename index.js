@@ -11,11 +11,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
-let barriersOn = false; //true //DEBUG false
+let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -250,9 +250,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: false, // false   // DEBUG true
+        wireframe: true, // false   // DEBUG true
         transparent: true,
-        opacity: 0, // 0    // DEBUG 0.5
+        opacity: 0.5, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -387,8 +387,10 @@ function createCHC(){
     addCollider("DownStairsPillarM", 81.8, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarL", 96, -13, 40, 2.4, 50, 2);
     addCollider("DownStairsPillarR", 67, -13, 40, 3, 50, 2);
-    addCollider("WallLockers1", 65, -13, 117, 3, 50, 105.5);
+    addCollider("WallLockers1", 65, -13, 110, 3, 50, 125);
     addCollider("WallLockers2", 100, -13, 170, 100, 50, 3);
+    addCollider("WallStairsOutSide", 110, -10, -40, 90, 150, 1);
+    addCollider("wallStairsFirst", 146, 0, -15, 1, 50, 70);
         //floors
     addCollider("smallStairFloor1", 135, -12, 0, 28, 1, 32);
     addCollider("smallStairFloor2", 135, -10, -30, 28, 1, 32);
@@ -414,10 +416,13 @@ function createCHC(){
     addCollider("midFloor4", 67, 60, -20, 28, 1, 50);
     addCollider("hallfloor", 165, 40, 180, 200, 1, 350);
         //walls
+    addCollider("WallStairsEpsilonwall", 95, 50, 4.2, 70, 50, 2);
+    addCollider("WallStairsEpsilonwall2", 177.5, 50, 4.2, 70, 50, 2);
+    addCollider('Barirrie3rdFloor', 115, 65, -30, 5, 50, 28)
     addCollider("wallLongHallRight", 125, 40, 179, 1, 60, 350);
-    addCollider("wallLongHallLeft", 146, 40, 203, 1, 60, 350);
+    addCollider("wallLongHallLeft", 146, 40, 190, 1, 60, 380);
     addCollider("wallLongHallEnd", 105, 40, 339, 100, 60, 1);
-    addCollider("wallStairs", 146, 40, -20, 1, 60, 50);
+    addCollider("wallStairsSecond", 146, 40, -20, 1, 60, 50);
     addCollider("gamaWall1", 102.5, 40, 272, 45, 65, 1);
     addCollider("gamaWall2", 81.5, 40, 280, 1, 60, 100);
         //doors
@@ -507,10 +512,6 @@ function createCHC(){
     loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 152], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerGray.glb", [100, 0, 158], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerGray.glb", [100, 0, 164], [3,2.5,3], [0, Math.PI / 2, 0]);
-    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 170], [3,2.5,3], [0, Math.PI / 2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 176], [3,2.5,3], [0, Math.PI / 2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 182], [3,2.5,3], [0, Math.PI / 2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 188], [3,2.5,3], [0, Math.PI / 2, 0]);
                 //second row 1
     loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 104], [3,2.5,3], [0, Math.PI /-2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 110], [3,2.5,3], [0, Math.PI / -2, 0]);
@@ -523,12 +524,24 @@ function createCHC(){
     loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 152], [3,2.5,3], [0, Math.PI / -2, 0]);
     loadModel("Locker", "./models/LockerGray.glb", [109, 0, 158], [3,2.5,3], [0, Math.PI / -2, 0]);
     loadModel("Locker", "./models/LockerGray.glb", [109, 0, 164], [3,2.5,3], [0, Math.PI / -2, 0]);
-    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 170], [3,2.5,3], [0, Math.PI / -2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 176], [3,2.5,3], [0, Math.PI / -2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 182], [3,2.5,3], [0, Math.PI / -2, 0]);
-    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 188], [3,2.5,3], [0, Math.PI / -2, 0]);
+                //third row 
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 86], [3,2.5,3], [0, Math.PI /-2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 92], [3,2.5,3], [0, Math.PI /-2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 98], [3,2.5,3], [0, Math.PI /-2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 104], [3,2.5,3], [0, Math.PI /-2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 110], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 116], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 122], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 128], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 134], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 140], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 146], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [70, 0, 152], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 158], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [70, 0, 164], [3,2.5,3], [0, Math.PI / -2, 0]);
         //benches
     loadModel("Bench", "./models/lockerBench.glb", [141, -14.5, 113], [3.75, 3, 3], [0, Math.PI / 2, 0]);
+    loadModel("Bench", "./models/lockerBench.glb", [104.5, -14.5, 98], [2.5, 3, 3]);
     
 }
 
