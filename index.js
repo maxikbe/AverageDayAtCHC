@@ -11,11 +11,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
-let barriersOn = true; //true //DEBUG false
+let barriersOn = false; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -456,13 +456,13 @@ function createCHC(){
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
     addCollider('EpsilonChair',110, 50, 47.5, 2,2,2)
         //stairColliders
-    addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
-    addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
+    // addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
+    // addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
 
     //THIRD Floor
         //floors
-    addCollider("midFloor2", 126, 72, -5, 40, 1, 20);
-    addCollider("midFloor3", 130, 72, -30, 35, 1, 32);
+    // addCollider("midFloor2", 126, 72, -5, 40, 1, 20);
+    // addCollider("midFloor3", 130, 72, -30, 35, 1, 32);
 
 
     //CHC Model
@@ -478,6 +478,7 @@ function createCHC(){
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
         //lockers
+                //first row
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 50], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 56], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 62], [3,2.5,3], [0, Math.PI / 2, 0]);
@@ -494,6 +495,38 @@ function createCHC(){
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 146], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 152], [3,2.5,3], [0, Math.PI / 2, 0]);
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 158], [3,2.5,3], [0, Math.PI / 2, 0]);
+                //second row 2
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 104], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 110], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 116], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 122], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 128], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 134], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 140], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 146], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 152], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 158], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 164], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [100, 0, 170], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 176], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 182], [3,2.5,3], [0, Math.PI / 2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [100, 0, 188], [3,2.5,3], [0, Math.PI / 2, 0]);
+                //second row 1
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 104], [3,2.5,3], [0, Math.PI /-2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 110], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 116], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 122], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 128], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 134], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 140], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 146], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 152], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 158], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 164], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerGray.glb", [109, 0, 170], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 176], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 182], [3,2.5,3], [0, Math.PI / -2, 0]);
+    loadModel("Locker", "./models/LockerBlue.glb", [109, 0, 188], [3,2.5,3], [0, Math.PI / -2, 0]);
         //benches
     loadModel("Bench", "./models/lockerBench.glb", [141, -14.5, 113], [3.75, 3, 3], [0, Math.PI / 2, 0]);
     
