@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = false;
+let CHCpart1 = true;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = true;
+let CHCpart5 = false;
 let CHCpartEND = false;
 
 // newQuest
@@ -1467,7 +1467,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1883,14 +1883,14 @@ function animate() {
         }
         if(CHCpart5){
             if(inDeltaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
-            if(!inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
+            if(!inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2);
             if(!newQuest){
                 newQuest = true
                 alert_text("New mission!")
             }
-            if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0.2); else changeColliderColor("EpsilonChair", 0);
         }
         if(CHCpartEND){
+            if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0)
             if(inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
             if (OutOfSchoolBarrier) {
                 const deltaY = -100;
