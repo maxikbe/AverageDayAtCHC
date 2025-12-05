@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
 let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = true;
+let CHCpart1 = false;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = false;
+let CHCpart5 = true;
 let CHCpartEND = false;
 
 // newQuest
@@ -734,6 +734,7 @@ function endTahootGame(){
     controls.lock()
     CHCpart5 = false
     CHCpartEND = true
+    controls.getObject().position.set('110, 50, 60')
 }
 
 function startTahootGame(){
@@ -1466,7 +1467,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(140, 55, 200); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1647,10 +1648,10 @@ function animate() {
                 }
                 break;
             case 'collider_VendingMachineGame':
-                interactionE.style.zIndex = 99;
-                if(KeyPressed == 'KeyE'){
-                    interactionE.style.zIndex = -99;
-                    if(!playedTahoot){
+                if(!playedTahoot){
+                    interactionE.style.zIndex = 99;
+                    if(KeyPressed == 'KeyE'){
+                        interactionE.style.zIndex = -99;
                         startVendingGame()
                     }
                 }
@@ -1661,7 +1662,7 @@ function animate() {
                     if(KeyPressed == 'KeyE'){
                         satDownEpsilon = true
                         interactionE.style.zIndex = -99;
-                        controls.getObject().position.set(140, 55, 200)
+                        controls.getObject().position.set(100, 50, 60)
                         startTahootGame()
                     }
                 }
@@ -1671,10 +1672,10 @@ function animate() {
                 if(KeyPressed == 'KeyE'){
                     if(!inEpsilonDoor && CHCpart5){
                         inEpsilonDoor = true
-                        controls.getObject().position.set(110, 50, 60);
+                        controls.getObject().position.set(115, 50, 47.5);
                     } else if (inEpsilonDoor && CHCpartEND) {
                         inEpsilonDoor = false
-                        controls.getObject().position.set(100, 50, 60)
+                        controls.getObject().position.set(135, 50, 47.5)
                     } else {
                         if(CHCpart5){
                             alert_text("I can´t leave, class is starting soon...")
