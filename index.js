@@ -734,7 +734,7 @@ function endTahootGame(){
     controls.lock()
     CHCpart5 = false
     CHCpartEND = true
-    controls.getObject().position.set('110, 50, 60')
+    controls.getObject().position.set(110, 55, 60)
 }
 
 function startTahootGame(){
@@ -1672,10 +1672,10 @@ function animate() {
                 if(KeyPressed == 'KeyE'){
                     if(!inEpsilonDoor && CHCpart5){
                         inEpsilonDoor = true
-                        controls.getObject().position.set(115, 50, 47.5);
+                        controls.getObject().position.set(115, 55, 47.5);
                     } else if (inEpsilonDoor && CHCpartEND) {
                         inEpsilonDoor = false
-                        controls.getObject().position.set(135, 50, 47.5)
+                        controls.getObject().position.set(135, 55, 47.5)
                     } else {
                         if(CHCpart5){
                             alert_text("I can´t leave, class is starting soon...")
