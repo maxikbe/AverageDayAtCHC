@@ -15,7 +15,7 @@ let locationNP = true;
 let locationCHC = false;
 
 // Settings
-let barriersOn = true; //true //DEBUG false
+let barriersOn = false; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -250,9 +250,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true, // false   // DEBUG true
+        wireframe: false, // false   // DEBUG true
         transparent: true,
-        opacity: 0.5, // 0    // DEBUG 0.5
+        opacity: 0, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -425,6 +425,11 @@ function createCHC(){
     addCollider("wallStairsSecond", 146, 40, -20, 1, 60, 50);
     addCollider("gamaWall1", 102.5, 40, 272, 45, 65, 1);
     addCollider("gamaWall2", 81.5, 40, 280, 1, 60, 100);
+    addCollider("deltaWall3", 102.5, 40, 140, 45, 65, 1);
+    addCollider("deltaWall2", 82, 40, 160, 1, 60, 100);
+    addCollider("deltaWall1", 102.5, 40, 206, 45, 65, 1);
+    addCollider("espilonWall1", 102.5, 40, 80, 45, 65, 1);
+    addCollider("espilonWall2", 82, 40, 50, 1, 60, 90);
         //doors
     addCollider("GamaDoor", 125, 50, 279, 2, 20, 9)
     addCollider("DeltaDoor", 125, 50, 166, 2, 20, 10.5)
@@ -432,7 +437,7 @@ function createCHC(){
         //door tags
     addImage("DeltaDoorTag", './imgs/DeltaSign.png', 126, 50, 166, 3, 3, 3)
     addImage("GamaDoorTag", './imgs/GamaSign.png', 126, 50, 279, 3, 3, 3)
-    addImage("EpsilonDoorTag", './imgs/GamaSign.png', 125, 50, 47.5, 3, 3, 3)
+    addImage("EpsilonDoorTag", './imgs/EpsilonSign.png', 125, 50, 47.5, 4, 3, 3)
         //furniture
     addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
     addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
@@ -459,7 +464,7 @@ function createCHC(){
         //interactables
     addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
-    addCollider('EpsilonChair',110, 50, 47.5, 2,2,2)
+    addCollider('EpsilonChair',110, 50, 60, 2,2,2)
         //stairColliders
     // addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
     // addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
@@ -1661,10 +1666,10 @@ function animate() {
                 if(KeyPressed == 'KeyE'){
                     if(!inEpsilonDoor && CHCpart5){
                         inEpsilonDoor = true
-                        controls.getObject().position.set(115, 50, 47.5);
+                        controls.getObject().position.set(115, 55, 47.5);
                     } else if (inEpsilonDoor && CHCpartEND) {
                         inEpsilonDoor = false
-                        controls.getObject().position.set(135, 50, 47.5)
+                        controls.getObject().position.set(135, 55, 47.5)
                     } else {
                         if(CHCpart5){
                             alert_text("I can´t leave, class is starting soon...")
