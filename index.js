@@ -1671,10 +1671,10 @@ function animate() {
                 if(KeyPressed == 'KeyE'){
                     if(!inEpsilonDoor && CHCpart5){
                         inEpsilonDoor = true
-                        controls.getObject().position.set(115, 55, 47.5);
+                        controls.getObject().position.set(110, 50, 60);
                     } else if (inEpsilonDoor && CHCpartEND) {
                         inEpsilonDoor = false
-                        controls.getObject().position.set(135, 55, 47.5)
+                        controls.getObject().position.set(100, 50, 60)
                     } else {
                         if(CHCpart5){
                             alert_text("I can´t leave, class is starting soon...")
