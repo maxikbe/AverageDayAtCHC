@@ -15,7 +15,7 @@ let locationNP = true;
 let locationCHC = false;
 
 // Settings
-let barriersOn = false; //true //DEBUG false
+let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -46,6 +46,7 @@ let ChairColliderPlayer = null;
 let DeltaDoor = null;
 let VendingMachineGame = null;
 let EpsilonDoor = null;
+let OutOfSchoolBarrier = null;
 
 //Doors
 let inMainCHCDoor = false;
@@ -272,6 +273,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "DeltaDoor") DeltaDoor = box;
     if (name === "VendingMachineGame") VendingMachineGame = box;
     if (name === "EpsilonDoor") EpsilonDoor = box;
+    if (name === "OutOfSchoolBarrier") OutOfSchoolBarrier = box;
 }
 
 // NEW: Function specifically for stairs
@@ -361,6 +363,7 @@ function createCHC(){
     //CHC Progress Barriers
     if(barriersOn){
         addCollider("BarrierPart1", 100, 0, 0, 2, 30, 60);
+        addCollider("OutOfSchoolBarrier", 10, 0, -45, 90, 30, 1);
     }
     
     //CHC Colliders
@@ -369,6 +372,8 @@ function createCHC(){
 
     //BOTTOM Floor
         //outside
+    addCollider("flowerColliderOutSide", -25, 0, -250, 1, 30, 580);
+    addCollider("SchoolCornerWall", 55.5, 0, -130, 17, 30, 180);
     addCollider("OutOfSchoolFloor", 50, -18 , -20, 160, 1, 140);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
     addCollider("GreyBrickWallSmall", 63, 0, 17, 5, 30, 5);
@@ -1886,6 +1891,12 @@ function animate() {
         }
         if(CHCpartEND){
             if(inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
+            if (OutOfSchoolBarrier) {
+                const deltaY = -100;
+                OutOfSchoolBarrier.min.y += deltaY;
+                OutOfSchoolBarrier.max.y += deltaY;
+                OutOfSchoolBarrier = null;
+            }
         }
     }
 
