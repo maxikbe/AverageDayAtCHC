@@ -1554,7 +1554,7 @@ function animate() {
             }
         }
         // Transition2
-        if(!transitionBus){
+        if(!transitionBus && schoolCHC){
             if(timerTransition > 0){
                 timerTransition -= delta;
                 transBG.style.background = 'rgba(0,0,0,'+timerTransition /3+')';
