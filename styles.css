@@ -406,3 +406,16 @@ canvas {
     display: flex;
     flex-direction: row;
 }
+
+.TimerTextAnimation{
+    animation: timerTextInCorner 2s 1;
+}
+
+.TimerText{
+    top: 5px; right: 15px; font-size: 30px;
+}
+
+@keyframes timerTextInCorner{
+    from{top: 40%; right: calc(50% - 60px); font-size: 60px;}    
+    to{top: 5px; right: 15px; font-size: 30px;}   
+}

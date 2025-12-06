@@ -11,11 +11,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
-let barriersOn = false; //true //DEBUG false
+let barriersOn = true; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -35,6 +35,7 @@ let createdNP = false;
 // OBJs
 let myCarRed = null;
 let myBus = null;
+let schoolCHC = null;
 
 // COLs
 let myBusFloor = null;
@@ -47,6 +48,7 @@ let DeltaDoor = null;
 let VendingMachineGame = null;
 let EpsilonDoor = null;
 let OutOfSchoolBarrier = null;
+let BusTimerInteraction = null;
 
 //Doors
 let inMainCHCDoor = false;
@@ -105,7 +107,7 @@ function createSnow(){
 
 //CLEAN MODELS
 function cleanModels(){
-    console.log("Cleaning...");
+    //console.log("Cleaning...");
     Object.values(models).forEach(model => {
         scene.remove(model);
                     
@@ -223,6 +225,7 @@ function loadModel(name, path, position = [0, 0, 0], scale = [1, 1, 1], rotation
             //OBJ DEFINICIONS
             if (name === "car") myCarRed = model;
             if (name === "bus") myBus = model;
+            if (name === "schoolCHC") schoolCHC = model;
         },
         undefined,
         (error) => console.error(`Error loading ${name}:`, error)
@@ -274,6 +277,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "VendingMachineGame") VendingMachineGame = box;
     if (name === "EpsilonDoor") EpsilonDoor = box;
     if (name === "OutOfSchoolBarrier") OutOfSchoolBarrier = box;
+    if (name === "BusTimerInteraction") BusTimerInteraction = box;
 }
 
 // NEW: Function specifically for stairs
@@ -375,7 +379,7 @@ function createCHC(){
     addCollider("flowerColliderOutSide2", 35, 0, -900, 1, 30, 1700);
     addCollider("flowerColliderOutSide", -25, 0, -520, 1, 30, 1500);
     addCollider("SchoolCornerWall", 50, 0, -130, 30.75, 30, 180);
-    addCollider("OutOfSchoolFloor", 50, -18 , -800, 160, 1, 1700);
+    addCollider("OutOfSchoolFloor", 50, -18 , -800, 250, 1, 1700);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
     addCollider("GreyBrickWallSmall", 63, 0, 17, 5, 30, 5);
     addCollider("SmallPillar", 63, 0, 22, 2, 30, 5);
@@ -384,8 +388,13 @@ function createCHC(){
     addCollider("TreeBusCollider", -150, 0, -1270, 250, 150, 3);
     addCollider("endOfMapCollider", -180, 0, -1570, 600, 150, 3);
     addCollider("busFloorEND", -250, -60, -1200, 370, 2, 750);
+    addCollider("busWallEND", -300, -40, -900, 370, 50, 1);
+    addCollider("busWallFRONT", -450, -40, -1250, 1, 50, 700);
+    addCollider("busWallBACK", -250, -40, -1050, 1, 50, 440);
+        //outside interactable
+    addCollider("BusTimerInteraction", -300, -45, -1175, 4,4,4)
         //outside stairs
-    addStairs("outsideStairs", -150, 0, -1445, 250, 80, 350, 40, "x+");
+    addStairs("outsideStairs", -170, 0, -1445, 200, 80, 350, 40, "x+");
         //doors
     addCollider("MainCHCDoor", 65, 0, -0.5, 2, 30, 30.5);
         //walls
@@ -558,6 +567,9 @@ function createCHC(){
         //benches
     loadModel("Bench", "./models/lockerBench.glb", [141, -14.5, 113], [3.75, 3, 3], [0, Math.PI / 2, 0]);
     loadModel("Bench", "./models/lockerBench.glb", [104.5, -14.5, 98], [2.5, 3, 3]);
+        //bus Station
+    loadModel("TrashCan4", "./models/OutSideTrashCan.glb", [-300, -55, -1194], [1.8, 2.6, 2.6], [0, Math.PI / 1, 0]); // Trash Right
+    loadModel("BlueBusSign2", "./models/BlueBusSign.glb", [-300, -60, -1195], [4, 4, 4], [0, Math.PI / 2, 0]);
     
 }
 
@@ -681,6 +693,48 @@ const interactionE = document.getElementById("interaction");
 //Transition global
 const transBG = document.getElementById("Transition");
 
+// RUNNING TIMER
+// running timer variables
+const runningTimerMAX = 60000 //ms  
+let runningTimer = 0
+const runningTimerUI = document.getElementById('RunningTimer')
+let timerActive = false
+let startedRunnningTimer = false
+
+function startRunningTimer(){
+    alert_text("Catch the bus!")
+    startedRunnningTimer = true
+    runningTimerUI.style.display = "flex"
+    runningTimerUI.classList.add("TimerTextAnimation")
+    timerActive = true;
+}
+
+function stopRunningTimer(succes){
+    runningTimerUI.style.display = "none"
+    timerActive = false;
+    if(succes){
+        controls.getObject().position.set(-300, -38, -1175)
+        playerPos.rotation.x = 0;
+        playerPos.rotation.z = 0;
+        playerPos.rotation.y = Math.PI /2;
+        velocity.x = 0
+        velocity.y = 0
+        velocity.z = 0
+        
+        alert_text("I made it in time!")
+        addCollider("busFloor2",-340, -55, -1140, 50, 1, 135); // Bus
+        loadModel("bus2", "./models/bus.glb", [-340, -55, -1140], [5, 5, 5], [0,Math.PI,0]); // Bus
+    }else{
+        controls.getObject().position.set(110, 55, 60)
+        startedRunnningTimer = false
+        alert_text("U dint´t catch the bus!",1000)
+        runningTimer = 0
+        inEpsilonDoor = true
+        LockerOpened = false
+        inMainCHCDoor = true
+    }
+}
+
 // TAHOOT GAME
 // tahoot game variables
 let satDownEpsilon = false;
@@ -747,6 +801,8 @@ function endTahootGame(){
     controls.lock()
     CHCpart5 = false
     CHCpartEND = true
+    newQuest = false
+    LockerOpened = false
     controls.getObject().position.set(110, 55, 60)
 }
 
@@ -775,7 +831,7 @@ function createTahootQuestion(){
     tahootRoundNumber += 1
     tahootAnsweredQuestions.push(tahootQuestionIndex)
 
-    console.log(tahootQuestionIndex)
+    //console.log(tahootQuestionIndex)
     if(Object.keys(tahootQuestionsAndAnswers[tahootQuestionIndex]).length > 4){
         for(let i = 0; i<4;i++){
             let question = document.createElement('button')
@@ -1298,6 +1354,12 @@ function updateGameTimers(deltaTime) {
             presWordTimer.style.width = newPercentage + "%";
         }
     }
+
+    if(timerActive){
+        if(runningTimer >= runningTimerMAX) return stopRunningTimer(false)
+        runningTimer += deltaTime
+        runningTimerUI.textContent = Math.floor((runningTimerMAX - runningTimer)/1000) +"s"
+    }
 }
 
 // RENDER LOOP
@@ -1478,14 +1540,18 @@ function animate() {
     if(locationCHC){
         if(!createdCHC){
             createCHC();
-            timerTransition = 3;
+            
             // player tp pos
-            controls.getObject().position.set(0, 50, -1400); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
-            canMove = true;
             createdCHC = true;
+        }else{
+            if(schoolCHC){
+                timerTransition = 3;
+                canMove = true;
+            }
         }
         // Transition2
         if(!transitionBus){
@@ -1498,7 +1564,7 @@ function animate() {
             }
         }
 
-        if(item1Snapped && CHCpart1){
+        if(item1Snapped && CHCpart1 ){
             lockerUI.style.display = 'none';
             canMove = true;
             cutsceneActive = false;
@@ -1519,9 +1585,14 @@ function animate() {
                         interactionE.style.zIndex = -99;
                         controls.getObject().position.set(73, 3.22, 0.35)
                     } else if(CHCpartEND && inMainCHCDoor){
-                        inMainCHCDoor = false;
-                        interactionE.style.zIndex = -99;
-                        controls.getObject().position.set(62, 3.22, 0.35)
+                        if(LockerOpened){
+                            inMainCHCDoor = false;
+                            interactionE.style.zIndex = -99;
+                            controls.getObject().position.set(62, 3.22, 0.35)
+                        }else{
+                            alert_text("I need to put shoes on first!")
+                        }
+                        
                     } else if(CHCpartEND && !inMainCHCDoor){
                         alert_text("I need to catch the bus!!!")
                     } else{
@@ -1581,11 +1652,10 @@ function animate() {
                         }
                     });
                 }else if(KeyPressed == "KeyE" && LockerOpened){
-                    if(CHCpartEND){
-
-                    }else{
-                        alert_text("I don´t need to go there...")
-                    }
+                    alert_text("I don´t need to go there...")
+                }else if(KeyPressed == "KeyE" && !LockerOpened && CHCpartEND){
+                    LockerOpened = true
+                    alert_text("I got the shoes!")
                 }
                 break;
             case 'collider_GamaDoor':
@@ -1661,7 +1731,7 @@ function animate() {
                 }
                 break;
             case 'collider_VendingMachineGame':
-                if(!playedTahoot){
+                if(!playedVendingGame){
                     interactionE.style.zIndex = 99;
                     if(KeyPressed == 'KeyE'){
                         interactionE.style.zIndex = -99;
@@ -1697,6 +1767,10 @@ function animate() {
                         }
                     }
                 }
+                break;
+            case 'collider_BusTimerInteraction':
+                interactionE.style.zIndex = 99
+                if(KeyPressed == 'KeyE') stopRunningTimer(true)
                 break;
             default:
                 interactionE.style.zIndex = -99;
@@ -1832,11 +1906,13 @@ function animate() {
             quests_text("Wait for the bus");
             cutsceneActive = true;
             // Looking for a bus
-            if(myBus.position.z >= -400 && myBus.position.z <= 0){
-                if(myBus.position.z <= -200){
-                    controls.getObject().rotation.y += delta /4;
-                } else{
-                    controls.getObject().rotation.y -= delta /4;
+            if(myBus){
+                if(myBus.position.z >= -400 && myBus.position.z <= 0){
+                    if(myBus.position.z <= -200){
+                        controls.getObject().rotation.y += delta /4;
+                    } else{
+                        controls.getObject().rotation.y -= delta /4;
+                    }
                 }
             }
         }    
@@ -1895,16 +1971,20 @@ function animate() {
             if(inDeltaDoor && !playedPresentaionGame) changeColliderColor("presentinGameInteraciton", 0.2); else changeColliderColor("presentinGameInteraciton", 0);
         }
         if(CHCpart5){
-            if(inDeltaDoor) changeColliderColor("GamaDoor", 0.2); else changeColliderColor("GamaDoor", 0);
-            if(!inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2);
+            if(inDeltaDoor) changeColliderColor("DeltaDoor", 0.2); else changeColliderColor("DeltaDoor", 0);
+            if(!inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonChair", 0.2), changeColliderColor("EpsilonDoor", 0);
             if(!newQuest){
                 newQuest = true
                 alert_text("New mission!")
             }
+            quests_text("Get to your last class - 1st floor, Epsilon")
         }
         if(CHCpartEND){
-            if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0)
-            if(inEpsilonDoor) changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
+            if(!startedRunnningTimer) startRunningTimer()
+            quests_text("Catch the bus!")
+            if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0), changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
+            if(LockerOpened) changeColliderColor("MainCHCDoor", 0.2), changeColliderColor("LockerInteract", 0); else changeColliderColor("LockerInteract", 0.2), changeColliderColor("MainCHCDoor", 0)
+            if(!inMainCHCDoor && timerActive) changeColliderColor("BusTimerInteraction", 0.2); else changeColliderColor("BusTimerInteraction", 0);
             if (OutOfSchoolBarrier) {
                 const deltaY = -100;
                 OutOfSchoolBarrier.min.y += deltaY;
