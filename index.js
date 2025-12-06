@@ -680,7 +680,7 @@ let busWaiting = false;
 let busRidingToSchool = false
 var carSpeed = 150;
 var busSpeed = 120;
-let transitionBus;
+let transitionBus = false;
 let didRodeToSchool = false;
 
 //Story
@@ -813,6 +813,7 @@ function startTahootGame(){
     cutsceneActive = true;
     controls.unlock()
     tahootUI.style.display = 'flex';
+    tahootInput.focus();
     playedTahoot = true;
 }
 
@@ -1546,6 +1547,7 @@ function animate() {
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
+
             createdCHC = true;
             timerTransition = 3;
             canMove = true;
@@ -1558,6 +1560,8 @@ function animate() {
             } else{
                 transitionBus = true;
                 transBG.style.background = 'rgba(0,0,0,0)';
+                document.getElementById('Transition').style.display = 'none';
+                document.getElementById('Transition').style.zIndex = -100;
             }
         }
 
