@@ -36,6 +36,10 @@ let createdNP = false;
 let myCarRed = null;
 let myBus = null;
 let schoolCHC = null;
+let busPassengers = [];
+let lastBusXPosition = 0;
+let lastBusYPosition = 0;
+let lastBusZPosition = 0;
 
 // COLs
 let myBusFloor = null;
@@ -61,6 +65,7 @@ let onChairGama = false;
 
 //People
 let addedTeacherGama = false
+let passengerCount = 1;
 
 //GUI
 let LockerOpened = false;
@@ -131,6 +136,41 @@ function cleanModels(){
     for (const key in models) {
         delete models[key];
     }
+}
+
+function clearNP() {
+    cleanModels();
+    if (myBus) {
+        scene.remove(myBus);
+        myBus = null;
+    }
+    
+    busPassengers.forEach(passenger => {
+        if (passenger) {
+            scene.remove(passenger);
+        }
+    });
+    
+    busPassengers = [];
+    scene.remove(snowField);
+    snowField.traverse(object => {
+        if (object.isMesh) {
+            object.geometry.dispose();
+            object.material.dispose();
+        }
+    });
+
+    snowField.clear();
+    people.length = 0
+    busPassengers = []
+    
+    colliders.length = 0;
+    stairs.length = 0;
+
+    // nulling variables
+    myCarRed = null;
+    myBus = null;
+    myBusFloor = null;
 }
 
 // TEXT TO HTML
@@ -204,6 +244,10 @@ function addImage(name, texturePath, x, y, z, width = 10, height = 20) {
     
     scene.add(mesh);
     people.push(mesh); 
+
+    for(let i = 0; i < passengerCount+1;i++){
+        if(name == "passenger"+i) busPassengers.push(mesh)      
+    }
 }
 
 // LOAD MODEL - gltf / .glb
@@ -358,6 +402,37 @@ function createNP(){
     loadModel("TrashCan3", "./models/OutSideTrashCan.glb", [40, -8, -88], [1.8, 2.2, 2.2], [0, Math.PI / 1, 0]); // Trash Right
     loadModel("BlueBusSign", "./models/BlueBusSign.glb", [45, -11, 50], [2, 2, 2], [0, Math.PI / 2, 0]);
     loadModel("TicketMat", "./models/TicketMat.glb", [40, -11, 26], [2.2, 2.2, 2.2], [0, Math.PI / 2, 0]);
+
+    //People in the bus
+    let baseX = null
+    let baseY = null
+    let baseZ = null
+    if(myBus && myBus.position){
+        lastBusXPosition = myBus.position.x;  
+        lastBusYPosition = myBus.position.y;
+        lastBusZPosition = myBus.position.z;
+        baseX = myBus.position.x;
+        baseY = myBus.position.y;
+        baseZ = myBus.position.z;
+    }
+
+    const scaleX = 10, scaleY = 25, scaleZ = 10;
+    
+    const zOffsets = [-35 ,-25,-15, -5, 5, 15, 25];
+    const xOffsets = [-20,-10, 0];
+
+    for (let i = 0; i < xOffsets.length; i++) {
+        const currentX = baseX + xOffsets[i] + Math.random()*5;
+        for (let j = 0; j < zOffsets.length; j++) {
+            const currentZ = baseZ + zOffsets[j] + Math.random()*5;
+            const passengerName = `passenger${passengerCount}`;
+
+            addImage(passengerName, "./imgs/Person.png", currentX, -1, currentZ, scaleX, scaleY, scaleZ);         
+            passengerCount++;
+        }
+    }
+    addImage("passenger"+passengerCount, "./imgs/Person.png", baseX+3, -1, baseZ+45, scaleX, scaleY, scaleZ); 
+    passengerCount++
 }
 
 function createCHC(){
@@ -1411,6 +1486,24 @@ function animate() {
             createNP();
             createdNP = true; 
         }
+
+        if (myBus) {
+            const deltaX = myBus.position.x - lastBusXPosition; 
+            const deltaY = myBus.position.y - lastBusYPosition; 
+            const deltaZ = myBus.position.z - lastBusZPosition; 
+            
+            busPassengers.forEach(passenger => {
+                if (passenger && passenger.position) {
+                    passenger.position.x += deltaX;
+                    passenger.position.y += deltaY; 
+                    passenger.position.z += deltaZ; 
+                }
+            });
+
+            lastBusXPosition = myBus.position.x;
+            lastBusYPosition = myBus.position.y; 
+            lastBusZPosition = myBus.position.z; 
+        }
         // Snowing
         if (snowing){
             snowField.children.forEach((snow) => {
@@ -1507,25 +1600,7 @@ function animate() {
                 transBG.style.background = 'rgba(0,0,0,'+timerTransition /3+')';
             } else{
                 // NP Scene cleaning
-                cleanModels();
-
-                scene.remove(snowField);
-                snowField.traverse(object => {
-                    if (object.isMesh) {
-                        object.geometry.dispose();
-                        object.material.dispose();
-                    }
-                });
-
-                snowField.clear();
-                
-                colliders.length = 0;
-                stairs.length = 0;
-
-                // nulling variables
-                myCarRed = null;
-                myBus = null;
-                myBusFloor = null;
+                clearNP()
 
                 locationNP = false;
                 busRidingToSchool = false;
