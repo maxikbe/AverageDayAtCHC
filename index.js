@@ -1547,14 +1547,11 @@ function animate() {
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
             createdCHC = true;
-        }else{
-            if(schoolCHC){
-                timerTransition = 3;
-                canMove = true;
-            }
+            timerTransition = 3;
+            canMove = true;
         }
         // Transition2
-        if(!transitionBus && schoolCHC){
+        if(!transitionBus){
             if(timerTransition > 0){
                 timerTransition -= delta;
                 transBG.style.background = 'rgba(0,0,0,'+timerTransition /3+')';
