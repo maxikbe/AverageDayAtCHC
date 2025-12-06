@@ -11,11 +11,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
-let barriersOn = true; //true //DEBUG false
+let barriersOn = false; //true //DEBUG false
 
 //Story Parts
 let CHCpart1 = true;
@@ -251,9 +251,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: false, // false   // DEBUG true
+        wireframe: true, // false   // DEBUG true
         transparent: true,
-        opacity: 0, // 0    // DEBUG 0.5
+        opacity: 0.5, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -295,9 +295,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: false, // false  // DEBUG true
+        wireframe: true, // false  // DEBUG true
         transparent: true,   
-        opacity: 0, // 0    // DEBUG 0.3
+        opacity: 0.5, // 0    // DEBUG 0.3
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -372,14 +372,20 @@ function createCHC(){
 
     //BOTTOM Floor
         //outside
-    addCollider("flowerColliderOutSide", -25, 0, -250, 1, 30, 580);
-    addCollider("SchoolCornerWall", 55.5, 0, -130, 17, 30, 180);
-    addCollider("OutOfSchoolFloor", 50, -18 , -20, 160, 1, 140);
+    addCollider("flowerColliderOutSide2", 35, 0, -900, 1, 30, 1700);
+    addCollider("flowerColliderOutSide", -25, 0, -520, 1, 30, 1500);
+    addCollider("SchoolCornerWall", 50, 0, -130, 30.75, 30, 180);
+    addCollider("OutOfSchoolFloor", 50, -18 , -800, 160, 1, 1700);
     addCollider("GreyBrickWall", 56, 0, 18, 20, 30, 5);
     addCollider("GreyBrickWallSmall", 63, 0, 17, 5, 30, 5);
     addCollider("SmallPillar", 63, 0, 22, 2, 30, 5);
     addCollider("Pillar1", 62, 0, -18.5, 5, 30, 6);
     addCollider("KitchenWallPillar", 17.4, 0, 38, 8.8, 30, 3);
+    addCollider("TreeBusCollider", -150, 0, -1270, 250, 150, 3);
+    addCollider("endOfMapCollider", -180, 0, -1570, 600, 150, 3);
+    addCollider("busFloorEND", -250, -60, -1200, 370, 2, 750);
+        //outside stairs
+    addStairs("outsideStairs", -150, 0, -1445, 250, 80, 350, 40, "x+");
         //doors
     addCollider("MainCHCDoor", 65, 0, -0.5, 2, 30, 30.5);
         //walls
@@ -589,6 +595,7 @@ window.addEventListener('resize', () => {
 
 // USER KEY IMPUTS
 const move = { forward: false, backward: false, left: false, right: false };
+//sprint and walking
 //Start
 let KeyPressed;
 document.addEventListener('keydown', (e) => {
@@ -599,6 +606,9 @@ document.addEventListener('keydown', (e) => {
         case 'KeyA': move.left = true; break;
         case 'KeyD': move.right = true; break;
     }
+    if(e.code == "ShiftLeft"){
+        speed = 0.7
+    }
 });
 //Stop
 document.addEventListener('keyup', (e) => {
@@ -608,6 +618,9 @@ document.addEventListener('keyup', (e) => {
         case 'KeyS': move.backward = false; break;
         case 'KeyA': move.left = false; break;
         case 'KeyD': move.right = false; break;
+    }
+    if(e.code ==  "ShiftLeft"){
+        speed = 0.3
     }
 });
 
@@ -637,7 +650,7 @@ const playerHalfWidth = 1.05;
 
 const velocity = new THREE.Vector3();
 
-const speed = 0.3;
+let speed = 0.3;
 const gravity = 0.05;
 
 //Player Start Position and Camera
@@ -1467,7 +1480,7 @@ function animate() {
             createCHC();
             timerTransition = 3;
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10
+            controls.getObject().position.set(0, 50, -1400); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
