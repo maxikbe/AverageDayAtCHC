@@ -11,19 +11,20 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = false;
-let locationCHC = true;
+let locationNP = true;
+let locationCHC = false;
 
 // Settings
-let barriersOn = false; //true //DEBUG false
+let barriersOn = true; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = false;
+let CHCpart1 = true;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = true;
+let CHCpart5 = false;
 let CHCpartEND = false;
+let theEnd = false
 
 // newQuest
 let newQuest = false
@@ -298,9 +299,9 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
-        wireframe: true, // false   // DEBUG true
+        wireframe: false, // false   // DEBUG true
         transparent: true,
-        opacity: 0.5, // 0    // DEBUG 0.5
+        opacity: 0, // 0    // DEBUG 0.5
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -797,6 +798,7 @@ let didRodeToSchool = false;
 //Story
 let cutScene1Finnished = false;
 let onBus = false;
+let onBus2 = true
 let item1Snapped = false;
 
 //Interaction global
@@ -827,14 +829,21 @@ function stopRunningTimer(succes){
         controls.getObject().position.set(-300, -38, -1175)
         playerPos.rotation.x = 0;
         playerPos.rotation.z = 0;
+        playerPos.rotation.y = 0;
         playerPos.rotation.y = Math.PI /2;
         velocity.x = 0
         velocity.y = 0
         velocity.z = 0
+        canMove = false
+        cutsceneActive = true
+        controls.unlock()
         
         alert_text("I made it in time!")
         addCollider("busFloor2",-340, -55, -1140, 50, 1, 135); // Bus
         loadModel("bus2", "./models/bus.glb", [-340, -55, -1140], [5, 5, 5], [0,Math.PI,0]); // Bus
+        setTimeout(() =>{
+            onBus2 = false
+        }, 250)
     }else{
         controls.getObject().position.set(105, 55, 98-75)
         startedRunnningTimer = false
@@ -1657,7 +1666,7 @@ function animate() {
             createCHC();
             
             // player tp pos
-            controls.getObject().position.set(75, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
+            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1891,7 +1900,9 @@ function animate() {
                 if(KeyPressed == 'KeyE') stopRunningTimer(true)
                 break;
             default:
-                interactionE.style.zIndex = -99;
+                if(!theEnd){
+                    interactionE.style.zIndex = -99;
+                }
                 break;
         }
     }
@@ -2108,6 +2119,33 @@ function animate() {
                 OutOfSchoolBarrier.min.y += deltaY;
                 OutOfSchoolBarrier.max.y += deltaY;
                 OutOfSchoolBarrier = null;
+            }
+        }
+        if(!onBus2){
+            theEnd = true
+            interactionE.style.zIndex = 99
+            if(KeyPressed == 'KeyE'){
+                console.log(54654635445345454554)
+                interactionE.style.zIndex = -99
+                controls.getObject().position.x -= 30;
+                onBus2 = true
+                setTimeout(() => {
+                    transBG.style.background = 'rgba(0,0,0,1)';
+                    transBG.style.zIndex = "98"
+                    transBG.style.display = "flex"
+                    setTimeout(() => {
+                        alert_text("Dark...")
+                        setTimeout(() => {
+                            alert_text("...Again?")
+                            setTimeout(() => {
+                                interactionE.style.fontSize = "50px"
+                                interactionE.style.zIndex = 99
+                                interactionE.textContent = "Thank you for playing!"
+                                interactionE.style.color = 'white'
+                            },3500)
+                        },3500)
+                    },1000)
+                },1000)
             }
         }
     }
