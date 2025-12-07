@@ -497,10 +497,12 @@ function createCHC(){
     addCollider("FloorLockers", 105, -13, 105, 85, 1, 135);
     addCollider("midFloor1", 70, 20, -20, 28, 1, 50);
         //furniture
-    addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
+    addCollider("ColidersLockers1", 145, -13, 105, 15, 50, 135);
+    addCollider("ColidersLockers2", 104.5, -13, 135, 15.5, 50, 80);
+    addCollider("ColidersLockers3", 66, -13, 135, 15.5, 50, 105);
         //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
-    addCollider("VendingMachineGame", 121 , 0, 40, 17.8, 15, 16);
+    addCollider("VendingMachineGame", 121 , 0, 40, 17.8, 15, 16.2);
         //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -1694,6 +1696,7 @@ function animate() {
             createdCHC = true;
             timerTransition = 3;
             canMove = true;
+            cutsceneActive =false
         }
         // Transition2
         if(!transitionBus){
