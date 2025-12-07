@@ -347,9 +347,9 @@ function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") 
     const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
     const material = new THREE.MeshBasicMaterial({
         color: 0xff00ff,
-        wireframe: true, // false  // DEBUG true
+        wireframe: false, // false  // DEBUG true
         transparent: true,   
-        opacity: 0.5, // 0    // DEBUG 0.3
+        opacity: 0, // 0    // DEBUG 0.3
         depthWrite: false
     });
     const mesh = new THREE.Mesh(geometry, material);
