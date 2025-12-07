@@ -2136,7 +2136,7 @@ function animate() {
             quests_text("Catch the bus!")
             if(inEpsilonDoor) changeColliderColor("EpsilonChair", 0), changeColliderColor("EpsilonDoor", 0.2); else changeColliderColor("EpsilonDoor", 0);
             if(LockerOpened) changeColliderColor("MainCHCDoor", 0.2), changeColliderColor("LockerInteract", 0); else changeColliderColor("LockerInteract", 0.2), changeColliderColor("MainCHCDoor", 0)
-            if(!inMainCHCDoor && timerActive) changeColliderColor("BusTimerInteraction", 0.2); else changeColliderColor("BusTimerInteraction", 0);
+            if(!inMainCHCDoor && timerActive) changeColliderColor("BusTimerInteraction", 0.2), changeColliderColor("MainCHCDoor", 0); else changeColliderColor("BusTimerInteraction", 0);
             if (OutOfSchoolBarrier) {
                 const deltaY = -100;
                 OutOfSchoolBarrier.min.y += deltaY;
