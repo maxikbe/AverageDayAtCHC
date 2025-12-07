@@ -14,6 +14,9 @@ document.body.appendChild(renderer.domElement);
 let locationNP = true;
 let locationCHC = false;
 
+//Game Started
+let gameStarted = false
+
 // Settings
 let barriersOn = true; //true //DEBUG false
 
@@ -755,7 +758,7 @@ scene.add(controls.getObject());
 
 //controls unlock
 let canMove = false;
-let cutsceneActive = false;
+let cutsceneActive = true;
 
 document.addEventListener('click', () => {
     if (!cutsceneActive) {
@@ -854,6 +857,22 @@ function stopRunningTimer(succes){
         inMainCHCDoor = true
     }
 }
+
+// START GAME
+const startPopup = document.getElementById('start-popup');
+const continueButton = document.getElementById('continue-button');
+
+function startGame() {
+    startPopup.style.display = 'none';
+    transBG.style.display = 'none'; 
+    transBG.style.zIndex = -99;
+    interactionE.style.zIndex = -99;
+    interactionE.style.display = "flex"
+
+    gameStarted = true
+}
+
+continueButton.addEventListener('click', startGame);
 
 // TAHOOT GAME
 // tahoot game variables
@@ -1488,6 +1507,7 @@ function updateGameTimers(deltaTime) {
 
 // RENDER LOOP
 function animate() {
+    if(!gameStarted) return requestAnimationFrame(animate);;
     const delta = clock.getDelta(); // Time since last frame
     const deltaTimeMs = delta * 1000;
     

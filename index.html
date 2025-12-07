@@ -7,8 +7,15 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
+        <div id="start-popup" style="width: 50%;height: 50%;background-color: rgba(31, 31, 31, 0.63);border: 5px rgb(255, 255, 255) solid;padding: 15px 15px;border-radius: 25px;color: white;position: absolute;display: flex;justify-content: center;align-items: center;flex-direction: column;z-index: 999;">
+            <h1>Welcome!</h1>
+            <h2 style="text-align: center;">"WSAD" to move, "Shift" to run, "E" to interact</h2>
+            <p>Click continue to begin your average day.</p>
+            <button id="continue-button">Continue</button>
+        </div>
+
         <div id="Transition"></div>
-        <div id="interaction" style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 style="font-size: medium;color: white;">Press "E" to...</h2></div>
+        <div id="interaction" style="z-index: -99;width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: none;"><h2 style="font-size: medium;color: white;">Press "E" to...</h2></div>
         <div style="width: 100vw;height: 100%;position: absolute;justify-content: center;align-items: center;display: flex;"><h2 id="alert" style="z-index: 99;;margin-bottom: -100px;font-size: larger;color: white;"></h2></div>
         
         <!--Locker-->
