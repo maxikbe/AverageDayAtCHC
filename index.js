@@ -11,18 +11,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // LOCATION ON MAP
-let locationNP = true;
-let locationCHC = false;
+let locationNP = false;
+let locationCHC = true;
 
 // Settings
-let barriersOn = true; //true //DEBUG false
+let barriersOn = false; //true //DEBUG false
 
 //Story Parts
-let CHCpart1 = true;
+let CHCpart1 = false;
 let CHCpart2 = false;
 let CHCpart3 = false;
 let CHCpart4 = false;
-let CHCpart5 = false;
+let CHCpart5 = true;
 let CHCpartEND = false;
 
 // newQuest
@@ -496,7 +496,7 @@ function createCHC(){
     addCollider("ColidersLockers", 145, -13, 105, 15, 50, 135);
         //interactables
     addCollider("LockerInteract", 144.5 , 5, 86, 15, 15, 5);
-    addCollider("VendingMachineGame", 120 , 5, 45, 15, 15, 5);
+    addCollider("VendingMachineGame", 121 , 0, 40, 17.8, 15, 16);
         //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
     addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
@@ -534,6 +534,7 @@ function createCHC(){
     addImage("GamaDoorTag", './imgs/GamaSign.png', 126, 50, 279, 3, 3, 3)
     addImage("EpsilonDoorTag", './imgs/EpsilonSign.png', 125, 50, 47.5, 4, 3, 3)
         //furniture
+            //gama
     addCollider("TableCollider",115.8, 50, 291.5, 17.5,15,7);
     addCollider("TableWithChairCollider",89.8, 50, 295, 17.5,15,14);
     addCollider("TableWithChairCollider2",115.8, 50, 308, 17.5,15,14);
@@ -542,7 +543,17 @@ function createCHC(){
     addCollider("TableWithChairCollider5",89.8, 50, 321, 17.5,15,14);
     addCollider("TableWithChairCollider6",115.8, 50, 334, 17.5,15,14);
     addCollider("TableWithChairCollider7",89.8, 50, 334, 17.5,15,14);
+            //epsilon
+    addCollider("TableCollider",115.8, 50, 91.5-75, 17.5,15,7);
+    addCollider("TableWithChairCollider",89.8, 50, 95-60, 17.5,15,14);
+    addCollider("TableWithChairCollider2",115.8, 50, 108-75, 17.5,15,14);
+    addCollider("TableWithChairCollider3",89.8, 50, 108-60, 17.5,15,14);
+    addCollider("TableWithChairCollider4",115.8, 50, 121-60, 17.5,15,14);
+    addCollider("TableWithChairCollider5",89.8, 50, 121-60, 17.5,15,14);
+    addCollider("TableWithChairCollider6",115.8, 50, 134-60, 17.5,15,14);
+    addCollider("TableWithChairCollider7",89.8, 50, 134-60, 17.5,15,14);
         //people STILL
+            //gama
     addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 297, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 297, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 310, 10,15,10)
@@ -556,10 +567,24 @@ function createCHC(){
     addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
+            //epsilon
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 97-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 97-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 110-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 110-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 123-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 123-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 136-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 136-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 110-75, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 123-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 123-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 136-60, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 136-60, 10,15,10)
         //interactables
     addCollider("ChairColliderPlayer",119.5, 50, 298, 5,15,7);
     addCollider("presentinGameInteraciton",100, 50, 155, 2, 22, 2)
-    addCollider('EpsilonChair',110, 50, 60, 2,2,2)
+    addCollider('EpsilonChair',119.5, 50, 98-75, 5,15,7)
         //stairColliders
     // addStairs("SecondFloorStairs1", 95, 65, -30, 40, 22, 20, 22, "x-");
     // addStairs("SecondFloorStairs2", 100, 82, -7, 50, 15, 20, 22, "x+");
@@ -574,6 +599,8 @@ function createCHC(){
         //school
     loadModel("schoolCHC", "./models/schoolCHC.glb", [100, -20, 0], [3, 3, 3]);
         //furniture
+    loadModel("VendingMachine", "./models/VendingMachine.glb", [115 , -12, 45], [3, 3, 3], [0,Math.PI,0])
+            //gama
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 298], [2.3,2.3,2.3], [0, Math.PI, 0]);
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 298], [2.3,2.3,2.3], [0, Math.PI, 0]);
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 311], [2.3,2.3,2.3], [0, Math.PI, 0]);
@@ -582,6 +609,15 @@ function createCHC(){
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 324], [2.3,2.3,2.3], [0, Math.PI, 0]);
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
     loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 337], [2.3,2.3,2.3], [0, Math.PI, 0]);
+            //espilon
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 98-75], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 98-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 111-75], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 111-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 124-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 124-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [119.5, 39.8, 137-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
+    loadModel("TableWithChair", "./models/schoolChairAndTable.glb", [93.5, 39.8, 137-60], [2.3,2.3,2.3], [0, Math.PI, 0]);
         //lockers
                 //first row
     loadModel("Locker", "./models/LockerBlue.glb", [141, 0, 50], [3,2.5,3], [0, Math.PI / 2, 0]);
@@ -800,7 +836,7 @@ function stopRunningTimer(succes){
         addCollider("busFloor2",-340, -55, -1140, 50, 1, 135); // Bus
         loadModel("bus2", "./models/bus.glb", [-340, -55, -1140], [5, 5, 5], [0,Math.PI,0]); // Bus
     }else{
-        controls.getObject().position.set(110, 55, 60)
+        controls.getObject().position.set(105, 55, 98-75)
         startedRunnningTimer = false
         alert_text("U dint´t catch the bus!",1000)
         runningTimer = 0
@@ -835,7 +871,9 @@ const tahootQuestion = document.getElementById('tahoot-question')
 const tahootAnswers = document.getElementById('tahoot-answers')
 const tahootScoreText = document.getElementById('tahoot-score')
 const tahootStreakText = document.getElementById('tahoot-streak')
-let tahootPin = 123456;
+const tahootPinUI = document.getElementById('tahoot-pin') 
+let tahootPin = Math.floor((Math.random() * 900000) + 100000);
+tahootPinUI.textContent = "Pin: "+ tahootPin
 let tahootAnsweredQuestions = []
 let tahootRoundNumber = 0
 const tahootRoundNumberGoal = 6;
@@ -865,6 +903,7 @@ function showStatistics(){
     tahootInput.style.display = 'none'
     tahootLogo.textContent = 'Score: ' +tahootPointScore
     tahootOutputText.textContent = 'Correct: '+tahootScoreRAW+ '/' +tahootRoundNumberGoal
+    tahootPinUI.style.display = "none"
     tahootInputSubmit.textContent = 'Leave'
 }
 
@@ -878,7 +917,7 @@ function endTahootGame(){
     CHCpartEND = true
     newQuest = false
     LockerOpened = false
-    controls.getObject().position.set(110, 55, 60)
+    controls.getObject().position.set(105, 55, 98-75)
 }
 
 function startTahootGame(){
@@ -1618,7 +1657,7 @@ function animate() {
             createCHC();
             
             // player tp pos
-            controls.getObject().position.set(0, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
+            controls.getObject().position.set(75, 1.5, 10); //Normal 0, 1.5, 10 //Debug // 140, 55, 200 // 75, 1.5, 10 // 0, 50, -1400
             controls.getObject().rotation.y = Math.PI / -2;
             controls.getObject().rotation.z = 0;
             controls.getObject().rotation.x = 0;
@@ -1821,7 +1860,10 @@ function animate() {
                     if(KeyPressed == 'KeyE'){
                         satDownEpsilon = true
                         interactionE.style.zIndex = -99;
-                        controls.getObject().position.set(100, 50, 60)
+                        controls.getObject().position.set(119.5, 50, 98-75)
+                        controls.getObject().rotation.x = 0;
+                        controls.getObject().rotation.y = Math.PI /5;
+                        controls.getObject().rotation.z = 0;
                         startTahootGame()
                     }
                 }
