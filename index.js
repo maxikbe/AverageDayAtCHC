@@ -1028,7 +1028,7 @@ tahootInputSubmit.addEventListener('click', handleTahootButtonClick);
 // vending game variables
 let vendingGameStarted = false
 let venRound = 0
-const venRoundGoal = 7;
+const venRoundGoal = 5;
 const venUI = document.getElementById('vending-ui')
 const venButtonGrid = document.getElementById('vending-container')
 const venScore = document.getElementById('vending-score')
