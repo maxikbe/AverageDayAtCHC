@@ -736,7 +736,7 @@ document.addEventListener('keydown', (e) => {
         case 'KeyD': move.right = true; break;
     }
     if(e.code == "ShiftLeft"){
-        speed = 0.7
+        speed = 0.6
     }
 });
 //Stop
@@ -1878,7 +1878,7 @@ function animate() {
                 }
                 break;
             case 'collider_VendingMachineGame':
-                if(!playedVendingGame){
+                if(!playedVendingGame && CHCpart2){
                     interactionE.style.zIndex = 99;
                     if(KeyPressed == 'KeyE'){
                         interactionE.style.zIndex = -99;
