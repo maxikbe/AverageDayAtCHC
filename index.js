@@ -328,7 +328,7 @@ function addCollider(name, x, y, z, sizeX, sizeY, sizeZ) {
     if (name === "BusTimerInteraction") BusTimerInteraction = box;
 }
 
-// NEW: Function specifically for stairs
+// Function specifically for stairs
 function addStairs(name, x, y, z, sizeX, sizeY, sizeZ, heightGain, axis = "x+") {
     const stairData = {
         name: name,
@@ -1582,7 +1582,7 @@ function animate() {
                     snow.position.y = camera.position.y + 50;
                     snow.position.x = camera.position.x + (Math.random() - 0.5) * 250;
                     snow.position.z = camera.position.z + (Math.random() - 0.5) * 250;
-                }
+                } 
             });
         }
 
