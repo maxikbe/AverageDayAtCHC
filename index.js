@@ -1153,7 +1153,7 @@ function endVendingGame(succes){
 
 //creaters new round and clears the last
 function venRoundCreate(){
-    if(venRound >= 5) return endVendingGame(true);
+    if(venRound >= venRoundGoal) return endVendingGame(true);
 
     // clears land buttons
     for(let i = 0; i < 20; i++){
