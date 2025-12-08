@@ -2148,7 +2148,6 @@ function animate() {
             theEnd = true
             interactionE.style.zIndex = 99
             if(KeyPressed == 'KeyE'){
-                console.log(54654635445345454554)
                 interactionE.style.zIndex = -99
                 controls.getObject().position.x -= 30;
                 onBus2 = true
