@@ -197,6 +197,7 @@ function alert_text(text, timeLenght = 2000) {
     // Show text
     el.textContent = text;
     el.style.opacity = "1";
+    el.style.display = "flex"
 
     setTimeout(() => {
         el.style.opacity = "0";
@@ -204,6 +205,7 @@ function alert_text(text, timeLenght = 2000) {
 
     setTimeout(() => {
         alertCooldown = false;
+        el.style.display = "none"
     }, timeLenght);
 }
 
@@ -505,7 +507,7 @@ function createCHC(){
     addCollider("VendingMachineGame", 121 , 0, 40, 17.8, 15, 16.2);
         //stairColliders
     addStairs("smallEntranceStairs1", 120, 2, 0, 8, 6, 32, 8, "x+");
-    addStairs("smallEntranceStairs2", 135, 6, -15, 25, 6, 4, 4, "z-");
+    addStairs("smallEntranceStairs2", 135, 6, -15, 26, 6, 4, 4, "z-");
     addStairs("smallEntranceStairs3", 82, 2, 20, 35, 5, 4, 4, "z+");
     addStairs("EntranceStairs1", 100, 21, -30, 50, 30, 20, 33, "x-");
     addStairs("EntranceStairs2", 100, 45, -7, 50, 22, 20, 33, "x+");
@@ -573,6 +575,18 @@ function createCHC(){
     addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 323, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 111.8, 40, 336, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 119.8, 40, 336, 10,15,10)
+            //delta
+    addImage("gamePerson1", "./imgs/Person.png", 117.35, 40, 195, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 117.35, 40, 185, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 117.35, 40, 175, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 108, 40, 202, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 98, 40, 202, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 195, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 185, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 175, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 165, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 155, 10,15,10)
+    addImage("gamePerson1", "./imgs/Person.png", 86, 40, 145, 10,15,10)
             //epsilon
     addImage("gamePerson1", "./imgs/Person.png", 85.8, 40, 97-60, 10,15,10)
     addImage("gamePerson1", "./imgs/Person.png", 93.8, 40, 97-60, 10,15,10)
